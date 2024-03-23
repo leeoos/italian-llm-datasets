@@ -7,6 +7,7 @@ This script willconvert a sentiment classification dataset taken from http://www
 # general imports 
 import os
 import sys
+import shutil
 from git import Repo
 
 # online resources
@@ -47,6 +48,7 @@ if __name__ == '__main__' :
     train_data_out = "sentipolc_train_data.zip"
     wget.download(url=train_data_url, out=train_data_out, bar=progress_bar)    
     print() 
+    shutil.rmtree("./__MACOSX")
     with zipfile.ZipFile(train_data_out, "r") as zip_ref:
       zip_ref.extractall()
     train_data = "training_set_sentipolc16.csv"
@@ -55,7 +57,8 @@ if __name__ == '__main__' :
     test_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/test_set_sentipolc16_gold2000.csv.zip"
     test_data_out = "sentipolc_test_data.zip"
     wget.download(url=test_data_url, out=test_data_out, bar=progress_bar) 
-    print()    
+    print() 
+    shutil.rmtree("./__MACOSX")
     with zipfile.ZipFile(test_data_out, "r") as zip_ref:
       zip_ref.extractall()
     test_data = "test_set_sentipolc16_gold2000.csv"
@@ -78,4 +81,5 @@ if __name__ == '__main__' :
   #         print(row)
 
   # to free up memory and avoid pushing data on github
-  delete_data()
+  if download:
+    delete_data()
