@@ -1,8 +1,6 @@
 # TASK 22 - AcCompl-it
 - Homepage: https://sites.google.com/view/accompl-it/home-page
-- GitHub: https://github.com/malvinanissim/gxg/tree/master/Data/Training
-
-If you can't get access to the data after filling the form, drop us an email!
+- GitHub: https://live.european-language-grid.eu/catalogue/corpus/8113/download/
 
 ## Data 
 AcCompl-It is a task aimed at developing and evaluating methods to classify Italian sentences according to Acceptability and Complexity.
