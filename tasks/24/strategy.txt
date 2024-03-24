@@ -1,12 +1,11 @@
 Sub-task 1 
 
-Explanation: 
 This is a BINARY subjectivity classification. Will be considered relevant annotations for this task 0 or 1 values under the subj field (1st column after the idtwitter). The possible choices are just "objective" or "subjective. 
 
 Strategy:
 Go over the dataset and check the value of subj then map 
-- subj = 0 --> "objective"
-- subj = 1 --> "subjective"
+- subj = 0 --> "oggettivo"
+- subj = 1 --> "soggettivo"
 
 -------------------------------------------------------------------
 Sub-task 2 
@@ -15,7 +14,20 @@ This is a MULTICLASS polarity classification. Will be considered relevant annota
 
 Strategy 1:
 Go over the data and check the values for opos and oneg. Then map all the possible combinations to the attributes as:
-- 10 --> "positive"
-- 01 --> "negative"
-- 11 --> "mixed"
-- 00 --> "neutral"
+- 10 --> "positivo"
+- 01 --> "negativo"
+- 11 --> "misto"
+- 00 --> "neutrale"
+
+Strategy 2:
+
+
+-------------------------------------------------------------------
+Sub-task 3
+
+This is an irony detection task. Will be considered relevant annotations for this task 0 or 1 values under the iro field (4th column after the idtwitter).
+
+Strategy:
+Go over the data and check the values for iro. Then map the values to:
+- 0 --> "serio"
+- 1 --> "ironico"

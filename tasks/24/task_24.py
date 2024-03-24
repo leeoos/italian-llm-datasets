@@ -21,6 +21,8 @@ import csv
 import jsonlines
 import pandas as pd
 
+# FUNCTIONS
+
 def progress_bar(current, total, width=80):
   progress_message = "Downloading: %d%% [%d / %d] bytes" % (current / total * 100, current, total)
   sys.stdout.write("\r" + progress_message)
@@ -40,6 +42,56 @@ def delete_data():
     os.remove("test_set_sentipolc16_gold2000.csv")
   except OSError:
       pass
+  
+def move_data(data, dest="results"):
+  os.makedirs(dest, exist_ok=True)
+  shutil.move(data, dest + "/" + data)
+
+
+def correct(data, DEBUG=False) :
+  big_list = []
+  with open(data, newline='') as csvfile:
+
+    spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+    counter = 0
+    bad_formatted = 0
+
+    for row in spamreader:
+      counter += 1
+
+      if len(row) > 9:
+        # removing extra double quotes 
+        new_row = [int(i.strip('"')) for i in row[:8]]
+        new_row.append(''.join(i for i in row[8:])[1:-1])
+        big_list.append(new_row)
+
+        if DEBUG:
+          print(f"before--> {len(row)}", end="-->")
+          print(row)
+          print(f"after --> {len(new_row)}", end="-->")
+          print(new_row)
+
+      else:
+        # removing extra double quotes 
+        new_row = [int(i.strip('"')) for i in row[:8]]
+        new_row.append(row[8][1:-1])
+        big_list.append(new_row)
+
+  print(f"Len original data --> {counter}")
+  print(f"Bad formatted samples --> {bad_formatted}")
+  print(f"Len after manipulation --> {len(big_list)}")  
+  return big_list
+
+def check_consistency(data, FIXED_LEN=9):
+  error_counter = 0    
+  for d in data:
+    if len(d) > FIXED_LEN:
+      error_counter += 1
+      print(f"Bad sample --> {d}")
+
+  print(f"Errors --> {error_counter}")
+
+  return error_counter == 0
 
 def make_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
@@ -60,11 +112,11 @@ def make_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
         print(f"data text: {data.text}")
 
       if TASK == 1:
-        choices = ["objective", "subjective"]
+        choices = ["oggettivo", "soggettivo"]
         label = 0 if data.subj == 0 else 1
       
       elif TASK == 2:
-        choices = ["positive", "negative", "mixed", "neutral"]
+        choices = ["positivo", "negativo", "misto", "neutrale"]
         combos = {
           (1,0): 0,
           (0,1): 1,
@@ -74,13 +126,12 @@ def make_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
         label = combos[(data.opos, data.oneg)]
 
       elif TASK == 3:
-        #TODO
-        pass
-    
+        choices = ["serio", "ironico"]
+        label = 0 if data.iro == 0 else 1
+            
       else:
         raise NameError
       
-
       json_dict = {
         "id": data.idtwitter,
         "text": data.text,
@@ -95,17 +146,20 @@ def make_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
       if DEBUG and DEBUG_COUNTER > 1: 
         break
 
-  print(f"Total data from {train_data} dumped into jsonl: {DEBUG_COUNTER}")
+  print(f"Sub-task --> {TASK} \t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(pandas_df)}")
 
+# MAIN
 
 if __name__ == '__main__' : 
 
-  parser = argparse.ArgumentParser(description='Run training and evaluation')
+  # set up command line args
+  parser = argparse.ArgumentParser(description='Dataset Manipulation')
   parser.add_argument('--download', '-d', action='store_true')
+  parser.add_argument('--task', '-t', type=int)
   args = parser.parse_args()
 
-  global download 
   download = True if args.download else False
+  sub_task = args.task if args.task else 1
 
   if download:
 
@@ -121,6 +175,7 @@ if __name__ == '__main__' :
     get_dat_from_url(test_data_url, test_data_out)
     test_data = "test_set_sentipolc16_gold2000.csv"
 
+    # remove macos directory
     try:
       shutil.rmtree("./__MACOSX")
     except FileNotFoundError:
@@ -136,24 +191,30 @@ if __name__ == '__main__' :
     train_data = root_dir + "/data/24/training_set_sentipolc16.csv"
     test_data = root_dir + "/data/24/test_set_sentipolc16_gold2000.csv"
 
-  print(f"train dataset: {train_data}")
+  print(f"Train dataset: {train_data}")
   train_df = pd.read_csv(train_data)
 
-  print(f"test dataset: {test_data}")
-  # test_df = pd.read_csv(test_data)
+  print(f"Test dataset: {test_data}")
+  test_data = correct(test_data, DEBUG=False)
 
-  # print header just to be on the safe side
-  # print(test_df.head)
-
-  # insert subtask tag
-  sub_task = 2
-
+  if check_consistency(test_data):
+    columns = list(train_df)
+    test_df = pd.DataFrame(test_data, columns=columns)
+    # print header just to be on the safe side
+    print(train_df.head, end="\n")
+    print(test_df.head)
+    
+  else:
+    print("Error: the csv file is bad formatted")
+      
   train_output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
   make_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=False)
 
-  # test_output_jsonl = "haspeede3-task" + str(task) + "-test-data.jsonl"
-  # make_jsonl(test_output_jsonl, train_df, TASK=task, DEBUG=False)
+  test_output_jsonl = "haspeede3-task" + str(sub_task) + "-test-data.jsonl"
+  make_jsonl(test_output_jsonl, test_df, TASK=sub_task, DEBUG=False)
 
-  # to free up memory and avoid pushing data on github
+  move_data(test_output_jsonl, "results")
+
+  # to avoid pushing data on github
   if download:
     delete_data()
