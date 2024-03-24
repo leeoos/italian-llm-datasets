@@ -161,3 +161,4 @@ cython_debug/
 
 # ignore actual data to avoid push large files on github
 data/
+results/
