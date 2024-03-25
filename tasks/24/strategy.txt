@@ -12,14 +12,12 @@ Sub-task 2
 
 This is a MULTICLASS polarity classification. Will be considered relevant annotations for this task 0 or 1 values under the pos and neg fields (2nd and 3rd column after the idtwitter). 
 
-Strategy 1:
+Strategy:
 Go over the data and check the values for opos and oneg. Then map all the possible combinations to the attributes as:
 - 10 --> "positivo"
 - 01 --> "negativo"
 - 11 --> "misto"
 - 00 --> "neutrale"
-
-Strategy 2:
 
 
 -------------------------------------------------------------------
@@ -31,3 +29,6 @@ Strategy:
 Go over the data and check the values for iro. Then map the values to:
 - 0 --> "serio"
 - 1 --> "ironico"
+
+Good evening. Perhaps I missed some information during the lecture, and I can't find it on the slides. Should we do individual reports? If so, should they only cover the tasks assigned to us or all the tasks of our group?
+Thanks
