@@ -30,5 +30,9 @@ Go over the data and check the values for iro. Then map the values to:
 - 0 --> "serio"
 - 1 --> "ironico"
 
-Good evening. Perhaps I missed some information during the lecture, and I can't find it on the slides. Should we do individual reports? If so, should they only cover the tasks assigned to us or all the tasks of our group?
-Thanks
+-------------------------------------------------------------------
+
+The topics will also take in account the context of the tweet (top attribute) which can be: 
+- 0  --> "generico"
+- 1  --> "politico" 
+- 2  --> "socio politico"
