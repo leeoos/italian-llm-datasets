@@ -9,7 +9,6 @@ import os
 import sys
 import shutil
 import argparse
-from git import Repo
 
 # online resources
 import wget
@@ -17,9 +16,7 @@ import zipfile
 
 # data manipulations
 import json
-import csv
 import jsonlines
-import pandas as pd
 
 # FUNCTIONS
 
@@ -33,25 +30,16 @@ def progress_bar(current, total, width=80):
 
 def get_dat_from_url(data_url, data_out):
     """A function to download the dataset from given url"""
-
+    os.makedirs("./data", exist_ok = True)
     wget.download(url=data_url, out=data_out, bar=progress_bar)    
     print()
     with zipfile.ZipFile(data_out, "r") as zip_ref:
       zip_ref.extractall()
 
+def get_data_from_zip(data_out):
 
-def delete_data():
-  """A simple function used to remove the original dataset file from the pwd after the script execution. This is done to avoid pushing large files on github."""
-
-  try:
-    os.remove("sentipolc_train_data.zip")
-    os.remove("training_set_sentipolc16.csv")
-    os.remove("sentipolc_test_data.zip")
-    os.remove("test_set_sentipolc16_gold2000.csv")
-
-  except OSError:
-      pass
-
+    with zipfile.ZipFile(data_out, "r") as zip_ref:
+      zip_ref.extractall()
 
 def move_data(data, dest="results"):
   """Just to move the final dtaset in the destination folder and once again avoid pushing large files."""
@@ -60,98 +48,10 @@ def move_data(data, dest="results"):
   shutil.move(data, dest + "/" + data)
   print(f"Data: {data} moved to {dest}")
 
-
-def check_quotes(data, FIXED_LEN=9, DEBUG=False):
-  """ This function  check the presence of bad formatted double quotes inside the tweets """
-  
-  with open(data, newline='', encoding="utf-8") as csvfile:
-      spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
-      counter = 0
-
-      # if a row contains more than the fixed number of columns 
-      # then it means the quotes are bad fomatted
-      for row in spamreader:
-        if len(row) > FIXED_LEN:
-          return True
-      return False
-
-
-def format(data, FIXED_LEN=9, DEBUG=False) :
-  """This function fixes the original csv dataset by removing extra quotes that messed up the standard column delimeters."""
-
-  big_list = []
-  with open(data, newline='', encoding="utf-8") as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-    counter = 0
-    bad_formatted = 0
-
-    for row in spamreader:
-      counter += 1
-      if len(row) > FIXED_LEN:
-        # removing extra double quotes 
-        new_row = [int(i.strip('"')) for i in row[:(FIXED_LEN -1)]]
-        new_row.append(''.join(i for i in row[(FIXED_LEN - 1):])[1:-1])
-        big_list.append(new_row)
-        if DEBUG:
-          print(f"before--> {len(row)}", end="-->")
-          print(row)
-          print(f"after --> {len(new_row)}", end="-->")
-          print(new_row)
-          if "\\\\\\" in row:
-              print(row)
-              print(new_row)
-
-      else:
-        # removing extra double quotes 
-        new_row = [int(i.strip('"')) for i in row[:8]]
-        new_row.append(row[8][1:-1])
-        big_list.append(new_row)
-        if DEBUG and "\\\\\\" in row:
-          print(row)
-
-  print(f"Len original data --> {counter}")
-  print(f"Bad formatted samples --> {bad_formatted}")
-  print(f"Len after manipulation --> {len(big_list)}")  
-  return big_list
-
-
-def check_consistency(data, FIXED_LEN=9):
-  """This function is used to verify that for all the rows the number of columns is consistent."""
-
-  for d in data:
-    if len(d) > FIXED_LEN:
-      print(f"First Bad sample --> {d}")
-      return False
-  return True
-
-
-def make_dataframe(data):
-  """This function will generate a pandas dataframe after checking (and correcting) the format of the provided csv."""
-
-  columns=['idtwitter', 'subj', 'opos', 'oneg', 'iro', 'lpos', 'lneg', 'top', 'text']
-
-  print(f"Dataset: {data}")
-  to_correct = check_quotes(data, DEBUG=False)
-  print(f"Contains bad formatted quotes --> {to_correct}") 
-  if to_correct:
-    data = format(data, DEBUG=False)
-    if check_consistency(data):
-      df = pd.DataFrame(data, columns=columns)
-      print(df.head, end="\n")
-      return df
-  
-    else:
-      print(f"Error: the csv file {test_data} is bad formatted")
-      return 1
-  
-  else:
-    df = pd.read_csv(data)
-    print(df.head, end="\n")
-    return df
-
-
-def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
+def txt_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
   """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
+
+  # create dict topic:posts the for each topic create sample 
 
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
     DEBUG_COUNTER = 0
@@ -216,20 +116,16 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
 if __name__ == '__main__' : 
 
   # set up command line args
-  parser = argparse.ArgumentParser(description='Dataset Manipulation')
-  parser.add_argument('--download', '-d', action='store_true')
-  parser.add_argument('--task', '-t', type=int)
-  args = parser.parse_args()
 
-  download = True if args.download else False
-  sub_task = args.task if args.task else 1
-
+  download = True
+ 
   if download:
 
     # download train data
-    train_data_url = "https://live.european-language-grid.eu/catalogue/corpus/8112/download/"
-    train_data_out = "final_package_train_test.zip"
-    get_dat_from_url(train_data_url, train_data_out)
+    train_data_url = "https://s3.cbk.cloud.syseleven.net/elg-datasets/23ea2522f1ff4198a7848ef1867a2807/14633443ac104f05ad2f86d44e3d196a/final_package_train_test.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=371f3c77a96342b4b179abb16728fd60%2F20240327%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240327T151534Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=46b996d4d42b0fc763f88d4e615dc754e2ca41f47d8424d33a8499670b4f1593"
+    train_data_out = "./data/final_package_train_test.zip"
+    #get_dat_from_url(train_data_url, train_data_out)
+    get_data_from_zip(train_data_out)
 
     # remove macos directory
     try:
@@ -237,30 +133,10 @@ if __name__ == '__main__' :
     except FileNotFoundError:
       pass
 
-  else:
+  # use cached datasel saved in local
+  test1_data = "./final_package_train_test/12/test_task1.txt"
+  test2a_data = "./final_package_train_test/12/test_task2a.txt"
+  test2b_data = "./final_package_train_test/12/test_task2b.txt"
+  train_data = "./final_package_train_test/12/train.txt"
 
-    # get the root directory of the Git project
-    repo = Repo(".", search_parent_directories=True)
-    root_dir = repo.git.rev_parse("--show-toplevel")
-
-    # use cached datasel saved in local
-    test1_data = root_dir + "/data/12/test_task1.txt"
-    test2a_data = root_dir + "/data/12/test_task2a.txt"
-    test2b_data = root_dir + "/data/12/test_task2b.txt"
-    test_data = root_dir + "/data/12/train.txt"
-    
-  train_df = make_dataframe(train_data)
-  train_output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
-  df_to_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=False)
-  move_data(train_output_jsonl, "results")
-
-  print("\n" + "-"*80 + "\n")
-
-  test_df = make_dataframe(test_data)
-  test_output_jsonl = "haspeede3-task" + str(sub_task) + "-test-data.jsonl"
-  df_to_jsonl(test_output_jsonl, test_df, TASK=sub_task, DEBUG=False)
-  move_data(test_output_jsonl, "results")
-
-  # to avoid pushing data on github
-  if download:
-    delete_data()
+  txt_to_jsonl(test1_data, train_data, TASK=1, DEBUG=False) # put json in data
