@@ -227,16 +227,9 @@ if __name__ == '__main__' :
   if download:
 
     # download train data
-    train_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/training_set_sentipolc16.csv.zip"
-    train_data_out = "sentipolc_train_data.zip"
+    train_data_url = "https://live.european-language-grid.eu/catalogue/corpus/8112/download/"
+    train_data_out = "final_package_train_test.zip"
     get_dat_from_url(train_data_url, train_data_out)
-    train_data = "training_set_sentipolc16.csv"
-
-    # download test data
-    test_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/test_set_sentipolc16_gold2000.csv.zip"
-    test_data_out = "sentipolc_test_data.zip"
-    get_dat_from_url(test_data_url, test_data_out)
-    test_data = "test_set_sentipolc16_gold2000.csv"
 
     # remove macos directory
     try:
@@ -251,8 +244,10 @@ if __name__ == '__main__' :
     root_dir = repo.git.rev_parse("--show-toplevel")
 
     # use cached datasel saved in local
-    train_data = root_dir + "/data/24/training_set_sentipolc16.csv"
-    test_data = root_dir + "/data/24/test_set_sentipolc16_gold2000.csv"
+    test1_data = root_dir + "/data/12/test_task1.txt"
+    test2a_data = root_dir + "/data/12/test_task2a.txt"
+    test2b_data = root_dir + "/data/12/test_task2b.txt"
+    test_data = root_dir + "/data/12/train.txt"
     
   train_df = make_dataframe(train_data)
   train_output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
