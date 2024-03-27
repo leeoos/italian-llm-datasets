@@ -159,6 +159,9 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# vscode
+.vscode
+
 # ignore actual data to avoid push large files on github
 data/
 results/
