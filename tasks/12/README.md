@@ -12,15 +12,17 @@ The data come in several `.txt` files. You have to use as training the file *tra
 
 ## Expected output
 
-You don't have to follow the tasks definition given in the EVALITA site. 
+Don't follow the tasks definition given in the EVALITA site. 
 
-For each user you have to create different samples, for each sample you have to take 5 different posts and predict separatelly **Topic**, **Age**, and **Genre**, so split each user diving by 5 the total number of posts.
+For each user you have to create a single sample.
+You should group the posts of a single user (use up to 5 posts) and use them to predict the Topic of the grouped posts. 
 
-### Task A TAG-it-topic
+
+### Task TAG-it-topic
 
 Consider only the **Topic** label.
 
-Create ```TAG-it-topic-train.jsonl```, ```TAG-it-topic-test.jsonl```.
+Create ```TAG-it-train.jsonl```, ```TAG-it-test.jsonl```.
 
 Each line in your output file must be a JSON object like the one below:
 
@@ -36,49 +38,13 @@ Each line in your output file must be a JSON object like the one below:
 }
 ```
 
-### Task B TAG-it-age
+#### Distractors
 
-Consider only the **Age** label.
-
-Create ```TAG-it-age-train.jsonl```, ```TAG-it-age-test.jsonl```.
-
-Each line in your output file must be a JSON object like the one below:
-
-```JSON
-{
-    "post1": str,
-    "post2": str,
-    "post3": str,
-    "post4": str,
-    "post5": str,
-    "choices": list[str],
-    "label": int
-}
-```
-
-### Task C TAG-it-genre
-
-Consider only the **Genre** label.
-
-Create ```TAG-it-genre-train.jsonl```, ```TAG-it-genre-test.jsonl```.
-
-Each line in your output file must be a JSON object like the one below:
-
-```JSON
-{
-    "post1": str,
-    "post2": str,
-    "post3": str,
-    "post4": str,
-    "post5": str,
-    "choices": list[str],
-    "label": int
-}
-```
+We expect from you to design a strategy to include distractors among the possible topics, so you select three different uncorrect topics beside the correct one. These three labels must be challenging for the selected posts.
 
 ### Prompts
 
-Create ```prompts-genre.jsonl```, ```prompts-topic.jsonl```, and ```prompts-age.jsonl```.
+Create```prompts.jsonl```.
 
 In this file you have to report the prompts you designed for the task. 
 Each line in your output file (1 line per prompt) must be a JSON object like the one below (max 5 lines in this file):
