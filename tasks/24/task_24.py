@@ -218,13 +218,15 @@ if __name__ == '__main__' :
   # set up command line args
   parser = argparse.ArgumentParser(description='Dataset Manipulation')
   parser.add_argument('--download', '-d', action='store_true')
+  parser.add_argument('--local', '-l', action='store_true')
   parser.add_argument('--task', '-t', type=int)
   args = parser.parse_args()
 
-  download = True if args.download else False
+  download = True #if args.download else False
+  local = True if args.local else False
   sub_task = args.task if args.task else 1
 
-  if download:
+  if not local:
 
     # download train data
     train_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/training_set_sentipolc16.csv.zip"
@@ -255,14 +257,14 @@ if __name__ == '__main__' :
     test_data = root_dir + "/data/24/test_set_sentipolc16_gold2000.csv"
     
   train_df = make_dataframe(train_data)
-  train_output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
+  train_output_jsonl = "sentipolc16-task" + str(sub_task) + "-train-data.jsonl"
   df_to_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=False)
   move_data(train_output_jsonl, "results")
 
   print("\n" + "-"*80 + "\n")
 
   test_df = make_dataframe(test_data)
-  test_output_jsonl = "haspeede3-task" + str(sub_task) + "-test-data.jsonl"
+  test_output_jsonl = "sentipolc16-task" + str(sub_task) + "-test-data.jsonl"
   df_to_jsonl(test_output_jsonl, test_df, TASK=sub_task, DEBUG=False)
   move_data(test_output_jsonl, "results")
 
