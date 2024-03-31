@@ -2,7 +2,7 @@
 
 """TASK 24 - SENTIPOLC 
 
-This script willconvert a sentiment classification dataset taken from http://www.di.unito.it/~tutreeb/sentipolc-evalita16/index.html into a QA dataset siutable for training LLMs"""
+This script is designed to convert a sentiment classification dataset from http://www.di.unito.it/~tutreeb/sentipolc-evalita16/index.html into a QA dataset suitable for training Large Language Models (LLMs)."""
 
 # general imports 
 import os
