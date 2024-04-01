@@ -253,11 +253,9 @@ if __name__ == '__main__' :
     pass
 
   # make json files
-  # dataset_types = ["WN"] # JUST FOR DEBUG
   print("Working...")
   for dtype in dataset_types:
     for dsplit in  dataset_splits.keys():
-      # dsplit = 'test'# JUST FOR DEBUG
       dataset = dtype + "_" + dsplit +".tsv"
       output_json = "NERMuD_" + dsplit + ".jsonl"
       print(f"Dataset --> {dataset}")
@@ -267,8 +265,6 @@ if __name__ == '__main__' :
       jsonl_files.add(output_json)
       print(f"JSONL output --> {output_json}")
 
-    #   break
-    # break
 
   print(jsonl_files)
   move_data(list(jsonl_files), results_dir)
