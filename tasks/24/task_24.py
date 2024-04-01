@@ -212,17 +212,25 @@ if __name__ == '__main__' :
 
   # set up command line args
   parser = argparse.ArgumentParser(description='Dataset Manipulation')
-  parser.add_argument('--task', '-t', type=int, help="-t [1-3]")
+  parser.add_argument('--debug', '-d', type=int, help="-t [1-3]")
   args = parser.parse_args()
+  
 
-  if not args.task or args.task > 3 or args.task < 1:
-    parser.error("Error no task was provided \n\n" + parser.format_help())  
+  DEBUG = args.debug 
+  data_dir = "./data/"
+  results_dir = "./results/"
+  os.makedirs(data_dir, exist_ok=True)
+  os.makedirs(results_dir, exist_ok=True)
 
-  sub_task = args.task 
-  os.makedirs("./data", exist_ok=True)
+  # clear previous results just to be sure
+  try:
+    shutil.rmtree(results_dir)
+    print("Removed old results")
+  except FileNotFoundError:
+    pass
 
   # get train data
-  train_data = "./data/training_set_sentipolc16.csv"
+  train_data = data_dir + "training_set_sentipolc16.csv"
   if not os.path.exists(train_data):
     train_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/training_set_sentipolc16.csv.zip"
     train_data_out = "./data/sentipolc_train_data.zip"
@@ -232,7 +240,7 @@ if __name__ == '__main__' :
     print(f"Dataset: {train_data} already present")
 
   # get test data
-  test_data = "./data/test_set_sentipolc16_gold2000.csv"
+  test_data = data_dir + "test_set_sentipolc16_gold2000.csv"
   if not os.path.exists(test_data):
     test_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/test_set_sentipolc16_gold2000.csv.zip"
     test_data_out = "./data/sentipolc_test_data.zip"
@@ -241,14 +249,15 @@ if __name__ == '__main__' :
   else:
     print(f"Dataset: {test_data} already present")
 
+  # load data into dataframe
   train_df = make_dataframe(train_data)
-  train_output_jsonl = "sentipolc16-task" + str(sub_task) + "-train-data.jsonl"
-  df_to_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=False)
-
   print("\n" + "-"*80 + "\n")
-
   test_df = make_dataframe(test_data)
-  test_output_jsonl = "sentipolc16-task" + str(sub_task) + "-test-data.jsonl"
-  df_to_jsonl(test_output_jsonl, test_df, TASK=sub_task, DEBUG=False)
+  print()
 
-  move_data([train_output_jsonl, test_output_jsonl], "results")
+  for sub_task in range(1,4):
+    train_output_jsonl = "sentipolc16-task" + str(sub_task) + "-train-data.jsonl"
+    df_to_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=DEBUG)
+    test_output_jsonl = "sentipolc16-task" + str(sub_task) + "-test-data.jsonl"
+    df_to_jsonl(test_output_jsonl, test_df, TASK=sub_task, DEBUG=DEBUG)
+    move_data([train_output_jsonl, test_output_jsonl], "results")
