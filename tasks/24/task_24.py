@@ -2,14 +2,13 @@
 
 """TASK 24 - SENTIPOLC 
 
-This script willconvert a sentiment classification dataset taken from http://www.di.unito.it/~tutreeb/sentipolc-evalita16/index.html into a QA dataset siutable for training LLMs"""
+This script is designed to convert a sentiment classification dataset from http://www.di.unito.it/~tutreeb/sentipolc-evalita16/index.html into a QA dataset suitable for training Large Language Models (LLMs)."""
 
 # general imports 
 import os
 import sys
 import shutil
 import argparse
-from git import Repo
 
 # online resources
 import wget
@@ -34,22 +33,18 @@ def progress_bar(current, total, width=80):
 def get_dat_from_url(data_url, data_out):
     """A function to download the dataset from given url"""
 
-    wget.download(url=data_url, out=data_out, bar=progress_bar)    
-    print()
+    if not os.path.exists(data_out):
+      wget.download(url=data_url, out=data_out, bar=progress_bar)    
+      print()
+
+    print(f"Extracting {data_out}...")
     with zipfile.ZipFile(data_out, "r") as zip_ref:
-      zip_ref.extractall()
-
-
-def delete_data():
-  """A simple function used to remove the original dataset file from the pwd after the script execution. This is done to avoid pushing large files on github."""
-
-  try:
-    os.remove("sentipolc_train_data.zip")
-    os.remove("training_set_sentipolc16.csv")
-    os.remove("sentipolc_test_data.zip")
-    os.remove("test_set_sentipolc16_gold2000.csv")
-
-  except OSError:
+      zip_ref.extractall("./data")
+    
+    # remove macos directory
+    try:
+      shutil.rmtree("./data/__MACOSX")
+    except FileNotFoundError:
       pass
 
 
@@ -57,8 +52,9 @@ def move_data(data, dest="results"):
   """Just to move the final dtaset in the destination folder and once again avoid pushing large files."""
 
   os.makedirs(dest, exist_ok=True)
-  shutil.move(data, dest + "/" + data)
-  print(f"Data: {data} moved to {dest}")
+  for d in data:
+    shutil.move(d, dest + "/" + d)
+    print(f"Data: {d} moved to {dest}")
 
 
 def check_quotes(data, FIXED_LEN=9, DEBUG=False):
@@ -211,63 +207,48 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
   print(f"Sub-task --> {TASK} \t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(pandas_df)}")
 
 
-
 # MAIN
 if __name__ == '__main__' : 
 
   # set up command line args
   parser = argparse.ArgumentParser(description='Dataset Manipulation')
-  parser.add_argument('--download', '-d', action='store_true')
-  parser.add_argument('--local', '-l', action='store_true')
-  parser.add_argument('--task', '-t', type=int)
+  parser.add_argument('--task', '-t', type=int, help="-t [1-3]")
   args = parser.parse_args()
 
-  download = True #if args.download else False
-  local = True if args.local else False
-  sub_task = args.task if args.task else 1
+  if not args.task or args.task > 3 or args.task < 1:
+    parser.error("Error no task was provided \n\n" + parser.format_help())  
 
-  if not local:
+  sub_task = args.task 
+  os.makedirs("./data", exist_ok=True)
 
-    # download train data
+  # get train data
+  train_data = "./data/training_set_sentipolc16.csv"
+  if not os.path.exists(train_data):
     train_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/training_set_sentipolc16.csv.zip"
-    train_data_out = "sentipolc_train_data.zip"
+    train_data_out = "./data/sentipolc_train_data.zip"
     get_dat_from_url(train_data_url, train_data_out)
-    train_data = "training_set_sentipolc16.csv"
-
-    # download test data
-    test_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/test_set_sentipolc16_gold2000.csv.zip"
-    test_data_out = "sentipolc_test_data.zip"
-    get_dat_from_url(test_data_url, test_data_out)
-    test_data = "test_set_sentipolc16_gold2000.csv"
-
-    # remove macos directory
-    try:
-      shutil.rmtree("./__MACOSX")
-    except FileNotFoundError:
-      pass
 
   else:
+    print(f"Dataset: {train_data} already present")
 
-    # get the root directory of the Git project
-    repo = Repo(".", search_parent_directories=True)
-    root_dir = repo.git.rev_parse("--show-toplevel")
+  # get test data
+  test_data = "./data/test_set_sentipolc16_gold2000.csv"
+  if not os.path.exists(test_data):
+    test_data_url = "http://www.di.unito.it/~tutreeb/sentipolc-evalita16/test_set_sentipolc16_gold2000.csv.zip"
+    test_data_out = "./data/sentipolc_test_data.zip"
+    get_dat_from_url(test_data_url, test_data_out)
 
-    # use cached datasel saved in local
-    train_data = root_dir + "/data/24/training_set_sentipolc16.csv"
-    test_data = root_dir + "/data/24/test_set_sentipolc16_gold2000.csv"
-    
+  else:
+    print(f"Dataset: {test_data} already present")
+
   train_df = make_dataframe(train_data)
   train_output_jsonl = "sentipolc16-task" + str(sub_task) + "-train-data.jsonl"
   df_to_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=False)
-  move_data(train_output_jsonl, "results")
 
   print("\n" + "-"*80 + "\n")
 
   test_df = make_dataframe(test_data)
   test_output_jsonl = "sentipolc16-task" + str(sub_task) + "-test-data.jsonl"
   df_to_jsonl(test_output_jsonl, test_df, TASK=sub_task, DEBUG=False)
-  move_data(test_output_jsonl, "results")
 
-  # to avoid pushing data on github
-  if download:
-    delete_data()
+  move_data([train_output_jsonl, test_output_jsonl], "results")

@@ -17,6 +17,7 @@ import zipfile
 # data manipulations
 import json
 import jsonlines
+import re
 
 # FUNCTIONS
 
@@ -48,67 +49,81 @@ def move_data(data, dest="results"):
   shutil.move(data, dest + "/" + data)
   print(f"Data: {data} moved to {dest}")
 
-def txt_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
+def create_list_of_lists(strings_list, sublist_length=5):
+    list_of_lists = []
+    for i in range(0, len(strings_list), sublist_length):
+        sublist = strings_list[i:i + sublist_length]
+        list_of_lists.append(sublist)
+    return list_of_lists
+
+
+
+def txt_to_jsonl(output_jsonl, txt_file_paths, DEBUG=False):
   """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
 
-  # create dict topic:posts the for each topic create sample 
+  # create dict topic:posts the for each topic create sample
+
+  start_user_flag = "<user"
+  end_user_flag = "</user"
+  start_post_flag = "<post"
+  end_post_flag = "</post"
+
+  topic_post = {}
+
+  # Define a regular expression pattern to match the topic attribute
+  pattern = r'topic="([^"]+)"'
+
+
+  for txt_file_path in txt_file_paths:
+    with open(txt_file_path) as txt_file:
+      for line in txt_file:
+        if start_user_flag in line:
+          # Use re.search to find the first occurrence of the pattern
+          match = re.search(pattern, line)
+          topic = match.group(1)
+          topic_post[topic] = []
+        elif start_post_flag in line or end_post_flag in line or end_user_flag in line:
+          continue
+        elif line == "\n":
+          continue
+        else:
+          topic_post[topic].append(line)
+
 
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
-    DEBUG_COUNTER = 0
 
-    topics = ["generico", "politico", "socio politico"]
+    topics = list(topic_post.keys())
+    print(topics)
 
-    for data in pandas_df.itertuples():
+    for topic, posts in topic_post.items():
+
+
       if DEBUG:
-        print(f"data index: {data.Index}")
-        print(f"data idtwitter: {data.idtwitter}")
-        print(f"data subj: {data.subj}")
-        print(f"data opos: {data.opos}")
-        print(f"data oneg: {data.oneg}")
-        print(f"data iro: {data.iro}")
-        print(f"data lpos: {data.lpos}")
-        print(f"data lneg: {data.lneg}")
-        print(f"data top: {data.top}")
-        if "\\\\\\" in data.text:
-          print(f"data text: {data.text}")
+        
+        print(topic, posts)
 
-      if TASK == 1:
-        choices = ["oggettivo", "soggettivo"]
-        label = 0 if data.subj == 0 else 1
-      
-      elif TASK == 2:
-        choices = ["positivo", "negativo", "misto", "neutrale"]
-        combos = {
-          (1,0): 0,
-          (0,1): 1,
-          (1,1): 2,
-          (0,0): 3
-        }
-        label = combos[(data.opos, data.oneg)]
 
-      elif TASK == 3:
-        choices = ["serio", "ironico"]
-        label = 0 if data.iro == 0 else 1
-            
+
       else:
-        raise NameError
-      
-      json_dict = {
-        "id": data.idtwitter,
-        "text": data.text,
-        "topic": topics[data.top],
-        "choices":  choices,
-        "label": label 
-      }
+        choices = [topic, topics[0], topics[1]]
+        label = 0
 
-      json_str = json.dumps(json_dict, ensure_ascii=False)
-      jout.write(json_str + '\n')
+        posts_list = create_list_of_lists(posts, 5)
+        for list_post in posts_list:
+          json_dict = {}
 
-      DEBUG_COUNTER += 1
-      # if DEBUG and DEBUG_COUNTER > 10: 
-      #   break
+          for i, sublist in enumerate(list_post):
+              key = f"post{i+1}"
+              if i < 5:
+                  json_dict[key] = sublist
+              else:
+                  json_dict[key] = ""
+          json_dict["choices"] = choices
+          json_dict["label"] = label
 
-  print(f"Sub-task --> {TASK} \t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(pandas_df)}")
+          json_str = json.dumps(json_dict, ensure_ascii=False)
+          jout.write(json_str + '\n')
+
 
 
 
@@ -134,9 +149,13 @@ if __name__ == '__main__' :
       pass
 
   # use cached datasel saved in local
-  test1_data = "./final_package_train_test/12/test_task1.txt"
-  test2a_data = "./final_package_train_test/12/test_task2a.txt"
-  test2b_data = "./final_package_train_test/12/test_task2b.txt"
-  train_data = "./final_package_train_test/12/train.txt"
+  test1_data = "./final_package_train_test/test_task1.txt"
+  test2a_data = "./final_package_train_test/test_task2a.txt"
+  test2b_data = "./final_package_train_test/test_task2b.txt"
+  train_data = "./final_package_train_test/training.txt"
 
-  txt_to_jsonl(test1_data, train_data, TASK=1, DEBUG=False) # put json in data
+  txt_files = [test1_data, test2a_data, test2b_data, train_data]
+
+  json_path = "./data/TAG-it-train.jsonl"
+
+  txt_to_jsonl(json_path, txt_files, DEBUG=False) # put json in data
