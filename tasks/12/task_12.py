@@ -2,7 +2,7 @@
 
 """TASK 12 - TAG-it 
 
-This script willconvert a sentiment classification dataset taken from https://sites.google.com/view/tag-it-2020/task into a QA dataset siutable for training LLMs"""
+This script will convert a sentiment classification dataset taken from https://sites.google.com/view/tag-it-2020/task into a QA dataset siutable for training LLMs"""
 
 # general imports 
 import os
@@ -56,11 +56,7 @@ def create_list_of_lists(strings_list, sublist_length=5):
         list_of_lists.append(sublist)
     return list_of_lists
 
-
-
-def txt_to_jsonl(output_jsonl, txt_file_paths, DEBUG=False):
-  """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
-
+def txt_to_dict(txt_file_paths):
   # create dict topic:posts the for each topic create sample
 
   start_user_flag = "<user"
@@ -88,15 +84,17 @@ def txt_to_jsonl(output_jsonl, txt_file_paths, DEBUG=False):
           continue
         else:
           topic_post[topic].append(line)
+  return topic_post
 
+
+def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False):
+  """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
 
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
 
     topics = list(topic_post.keys())
-    print(topics)
 
     for topic, posts in topic_post.items():
-
 
       if DEBUG:
         
@@ -123,6 +121,7 @@ def txt_to_jsonl(output_jsonl, txt_file_paths, DEBUG=False):
 
           json_str = json.dumps(json_dict, ensure_ascii=False)
           jout.write(json_str + '\n')
+    print("done")
 
 
 
@@ -158,4 +157,6 @@ if __name__ == '__main__' :
 
   json_path = "./data/TAG-it-train.jsonl"
 
-  txt_to_jsonl(json_path, txt_files, DEBUG=False) # put json in data
+  topic_posts = txt_to_dict(txt_files)
+
+  dict_to_jsonl(json_path, topic_posts, DEBUG=True) # put json in data
