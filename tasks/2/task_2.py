@@ -230,7 +230,6 @@ if __name__ == '__main__' :
   args = parser.parse_args()
   DEBUG = args.debug 
   MULTIPLE = args.multiple
-  mode = "w" if MULTIPLE else "a"
 
   # global variables
   results_dir = "./results/"
