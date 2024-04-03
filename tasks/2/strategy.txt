@@ -1,0 +1,27 @@
+Task 2 - NERMuD
+
+Named Entity Recognition:
+The approach was to go over the dataset row by row and, keeping in memory the label of the previous row, check for the following conditions:
+
+1. If the current row (word) has label B-xxx then:
+    1.1 if the previous row had label B-xxx or I-xxx than save the previous named entity and start collecting the new words from the current row;
+    1.2 if the previous row had label O or was empty then just start collecting the new words from the current row;
+
+2. If the current row (word) has label I-xxx and the previous row had label B-xxx or I-xxx then keep collecting the new words from the current row.
+
+3. If the current row (word) has label O and the previous row had label B-xxx or I-xxx than save the previous named entity.
+
+4. If the current row is an empty one then:
+    4.1 if the previous row had tag B-xxx or I-xxx and the next 
+
+Sentence Splitting:
+
+
+Question:
+Hi, sorry to bother you, I have some questions regarding this task:
+
+    in the README it says that for the WN dataset the provided text is already split in sentences while FIC and ADG are not, but I don't see in what this tsv files differ. In every files there are chunk of text separated by empty lines even when they belongs to the same sentence. Also on the website of NERMuD it says that sentences are empty-line-separated, is that an error?
+    we must create only 3 jsonl files named NERMuD_{split}.jsonl. Does this means that, for example for the "train" split, we have to combine samples from the three different dataset into a single dataset?
+    we have to create samples only for the words or multi-word that has label B-XXX or I-XX right?
+
+Thanks.
