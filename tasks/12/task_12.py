@@ -2,7 +2,7 @@
 
 """TASK 12 - TAG-it 
 
-This script willconvert a sentiment classification dataset taken from https://sites.google.com/view/tag-it-2020/task into a QA dataset siutable for training LLMs"""
+This script will convert a sentiment classification dataset taken from https://sites.google.com/view/tag-it-2020/task into a QA dataset siutable for training LLMs"""
 
 # general imports 
 import os
@@ -18,6 +18,7 @@ import zipfile
 import json
 import jsonlines
 import re
+import random
 
 # FUNCTIONS
 
@@ -56,11 +57,7 @@ def create_list_of_lists(strings_list, sublist_length=5):
         list_of_lists.append(sublist)
     return list_of_lists
 
-
-
-def txt_to_jsonl(output_jsonl, txt_file_paths, DEBUG=False):
-  """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
-
+def txt_to_dict(txt_file_paths):
   # create dict topic:posts the for each topic create sample
 
   start_user_flag = "<user"
@@ -88,30 +85,79 @@ def txt_to_jsonl(output_jsonl, txt_file_paths, DEBUG=False):
           continue
         else:
           topic_post[topic].append(line)
+  return topic_post
 
+
+def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
+  """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
 
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
 
     topics = list(topic_post.keys())
-    print(topics)
-
+    argomenti = ["CELEBRITÀ",
+                "ANIME",
+                "FUMO",
+                "AUTO-MOTO",
+                "SPORT",
+                "MOTO",
+                "METAL-DETECTING",
+                "TECNOLOGIA",
+                "MEDICINA-ESTETICA",
+                "INTRATTENIMENTO",
+                "NATURA",
+                "GIOCHI",
+                "GIOCHI_DI_RUOLO",
+                "OROLOGI"]
+    distractor = {
+      "CELEBRITÀ": ["MEDICINA-ESTETICA", "INTRATTENIMENTO"],
+      "ANIME": ["GIOCHI","GIOCHI_DI_RUOLO","INTRATTENIMENTO"],
+      "FUMO":["TECNOLOGIA","OROLOGI"],
+      "AUTO-MOTO":["SPORT","MOTO"],
+      "SPORT":["AUTO-MOTO","MOTO", "GIOCHI"],
+      "MOTO":["SPORT","AUTO-MOTO"],
+      "METAL-DETECTING":["NATURA","TECNOLOGIA","AUTO-MOTO"],
+      "TECNOLOGIA":["INTRATTENIMENTO","GIOCHI","AUTO-MOTO"],
+      "MEDICINA-ESTETICA":["CELEBRITÀ"],
+      "INTRATTENIMENTO":["GIOCHI","GIOCHI_DI_RUOLO","SPORT","ANIME"],
+      "NATURA":["METAL-DETECTING"],
+      "GIOCHI":["GIOCHI_DI_RUOLO","INTRATTENIMENTO"],
+      "GIOCHI_DI_RUOLO":["GIOCHI","INTRATTENIMENTO"],
+      "OROLOGI":["CELEBRITÀ"]
+    }
     for topic, posts in topic_post.items():
-
 
       if DEBUG:
         
-        print(topic, posts)
-
-
+        print(topic)
 
       else:
-        choices = [topic, topics[0], topics[1]]
-        label = 0
+
 
         posts_list = create_list_of_lists(posts, 5)
         for list_post in posts_list:
           json_dict = {}
+          if distract:
+            topic1 = distractor[argomenti[topics.index(topic)]][
+              random.randint(0,
+                            len(distractor[argomenti[topics.index(topic)]])-1
+                            )]
+            topic2 = random.randint(0,13)
+            while topics.index(topic) == topic2 or argomenti[topic2] in distractor[argomenti[topics.index(topic)]]:
+              topic2 = random.randint(0,13)
+            
+            choices = [argomenti[topics.index(topic)], topic1, argomenti[topic2]]
 
+          else:
+            topic1 = random.randint(0,13)
+            topic2 = random.randint(0,13)
+            while topics.index(topic) == topic1 or topics.index(topic) == topic2 or topic1 == topic2:
+              topic1 = random.randint(0,13)
+              topic2 = random.randint(0,13)
+              
+            choices = [argomenti[topics.index(topic)], argomenti[topic1], argomenti[topic2]]
+
+          random.shuffle(choices)
+          label = choices.index(argomenti[topics.index(topic)])
           for i, sublist in enumerate(list_post):
               key = f"post{i+1}"
               if i < 5:
@@ -123,6 +169,7 @@ def txt_to_jsonl(output_jsonl, txt_file_paths, DEBUG=False):
 
           json_str = json.dumps(json_dict, ensure_ascii=False)
           jout.write(json_str + '\n')
+    print("done")
 
 
 
@@ -158,4 +205,6 @@ if __name__ == '__main__' :
 
   json_path = "./data/TAG-it-train.jsonl"
 
-  txt_to_jsonl(json_path, txt_files, DEBUG=False) # put json in data
+  topic_posts = txt_to_dict(txt_files)
+
+  dict_to_jsonl(json_path, topic_posts, DEBUG=False) # put json in data

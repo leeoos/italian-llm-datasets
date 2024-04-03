@@ -212,11 +212,10 @@ if __name__ == '__main__' :
 
   # set up command line args
   parser = argparse.ArgumentParser(description='Dataset Manipulation')
-  parser.add_argument('--debug', '-d', type=int, help="-t [1-3]")
+  parser.add_argument('--debug', '-d', action='store_true')
   args = parser.parse_args()
-  
-
   DEBUG = args.debug 
+
   data_dir = "./data/"
   results_dir = "./results/"
   os.makedirs(data_dir, exist_ok=True)
