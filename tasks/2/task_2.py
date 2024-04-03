@@ -8,6 +8,7 @@ This script is designed to convert a series of dataset for extraction and classi
 import os
 import sys
 import shutil
+import argparse
 # from git import Repo
 
 # online resources
@@ -127,7 +128,7 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
 
   for i, data in enumerate(df.itertuples()): 
 
-    # vary bad piece of code
+    # very bad piece of code
     if (i + 1) < len(df):
       next = df.iloc[i + 1] 
       if pd.isna(next.label):
@@ -157,7 +158,7 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
         # make json objects with entities
         if len(entities) > 0:
           sentence_text = join_strings_smartly(sentence)
-          make_json(output_jsonl, sentence_id, sentence_text, entities)
+          make_json(output_jsonl, sentence_id, sentence_text, entities, DEBUG=DEBUG)
           # update sentence counter (here?)
           dataset_splits[dsplit] += 1
 
@@ -222,6 +223,15 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
 # MAIN
 if __name__ == '__main__' : 
 
+  # set up command line args
+  parser = argparse.ArgumentParser(description='Dataset Manipulation')
+  parser.add_argument('--debug', '-d', action='store_true')
+  parser.add_argument('--multiple', '-m', action='store_true')
+  args = parser.parse_args()
+  DEBUG = args.debug 
+  MULTIPLE = args.multiple
+  mode = "w" if MULTIPLE else "a"
+
   # global variables
   results_dir = "./results/"
   data_dir = "./data/"
@@ -257,11 +267,16 @@ if __name__ == '__main__' :
   for dtype in dataset_types:
     for dsplit in  dataset_splits.keys():
       dataset = dtype + "_" + dsplit +".tsv"
-      output_json = "NERMuD_" + dsplit + ".jsonl"
+      # save multiple jsonl files for each dataset 
+      if MULTIPLE:
+        output_json = "NERMuD_" + dtype + "_" + dsplit + ".jsonl"
+      # or save just one file for each split
+      else:
+        output_json = "NERMuD_" + dsplit + ".jsonl"
       print(f"Dataset --> {dataset}")
       df = make_dataframe(data_dir + dataset, dtype)
       print(f"Dataset len: {len(df)}")
-      add_to_json(output_json, df, dataset_splits, dsplit, DEBUG=False)
+      add_to_json(output_json, df, dataset_splits, dsplit, DEBUG=DEBUG)
       jsonl_files.add(output_json)
       print(f"JSONL output --> {output_json}")
 
