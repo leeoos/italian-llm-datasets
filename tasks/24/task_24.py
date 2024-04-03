@@ -150,8 +150,8 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
   """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
 
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
+    TOTAL_ROWS = len(pandas_df)
     DEBUG_COUNTER = 0
-
     topics = ["generico", "politico", "socio politico"]
 
     for data in pandas_df.itertuples():
@@ -197,10 +197,14 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
         "label": label 
       }
 
-      json_str = json.dumps(json_dict, ensure_ascii=False)
-      jout.write(json_str + '\n')
-
       DEBUG_COUNTER += 1
+      json_str = json.dumps(json_dict, ensure_ascii=False)
+      if DEBUG_COUNTER < TOTAL_ROWS:  # If not the last row, add a newline character
+        jout.write(json_str + '\n')
+      else:  # For the last row, do not add a newline character
+        jout.write(json_str)
+      # jout.write(json_str + '\n')
+
       # if DEBUG and DEBUG_COUNTER > 10: 
       #   break
 
