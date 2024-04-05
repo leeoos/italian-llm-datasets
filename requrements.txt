@@ -2,3 +2,4 @@ wget
 pandas
 shutil
 zipfile
+GitPython

@@ -16,7 +16,6 @@ import zipfile
 
 # data manipulations
 import json
-import jsonlines
 import re
 import random
 
@@ -177,7 +176,7 @@ if __name__ == '__main__' :
 
   # set up command line args
 
-  download = True
+  download = False
  
   if download:
 
