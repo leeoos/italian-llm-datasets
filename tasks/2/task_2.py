@@ -117,6 +117,12 @@ def update_entity(entities, entity, label, DEBUG=False):
   return []
 
 
+def tag_mapping(word):
+  if word in ["Lumpur", "Pietroburgo", "del", "Capo"]:
+    return "I"
+  return "B"
+
+
 def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
   """This function select the elements of a pandas dataframe that represent a named entity, (i.e., the words tagged with B-xxx, I-xxx) and add them to a given jsonl dataset."""
 
@@ -133,10 +139,12 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
   entities = []
   entity = []
   sentence = []
+  sentence_counter = 0
+  map_tag = False
 
   for i, data in enumerate(df.itertuples()): 
 
-    # very bad piece of code
+    # keep track of the next item in the dataset
     if (i + 1) < len(df):
       next = df.iloc[i + 1] 
       if pd.isna(next.label):
@@ -146,11 +154,23 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
 
     # update sentence counter
     sentence_id = dataset_splits[dsplit]
+    allow_change = True
 
-    # condictions for blank line
-    if pd.isna(data.word) and pd.isna(data.label):
+    # condictions for blank line or middle stop
+    if (pd.isna(data.word) and pd.isna(data.label)) or (data.word == "." and not pd.isna(next.word)):
+
+      # CORRECT BAD FORMATTED SAMPLES FOR TASK WN TEST
+      if output_json == "NERMuD_WN_test.jsonl":
+        if previous["word"] == "Laura" and next.word == "Vasco":
+          next_tag = "O"
+        if next.word in ["Baku", "Delhi"]:
+          allow_change = False
+          map_tag = True
+        if previous["word"] in ["Dubai", "Budapest"]:
+          map_tag = False
+
       if previous["tag"] in ["B", "I"] and \
-        (next_tag != "I"): # this is veeery specific :<:
+        (next_tag != "I"): # this is veeery specific :<
         # save previous entity
         entity = update_entity(entities, entity, label=labels_map[previous["label"]], DEBUG=DEBUG)
 
@@ -159,10 +179,19 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
         previous["word"] = np.nan
         previous["label"] = np.nan
 
+      if False:
+        """This control is made just identify the bad formatted sentences.
+        Those sentences are then deal with case by case since no clear pattern appear!!!"""
+
+        if previous["tag"] in ["B", "I"] and (next_tag == "I"):
+          if previous["tag"] == "B" : print("-"*100 + "\n")
+          print(f"Error sequence: {previous['word']} {previous['tag']}_{previous['label']} ---EMPTY LINE--- {next.word} {next.label}")
+          print()
+
       # change sentence
-      break_symbols = {',', ';', ':', '!', '?','<','(', '[', '{', '}', ']', ')', '>'}
+      break_symbols = {',', ':', '!', '?','<','(', '[', '{', '}', ']', ')', '>'}
       if (previous["word"] not in break_symbols) and \
-        (next_tag != "I"): # also this is veeery specific :<
+        (next_tag != "I") and allow_change: # also this is veeery specific :<
         # make json objects with entities
         if len(entities) > 0:
           sentence_text = join_strings_smartly(sentence)
@@ -184,6 +213,8 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
         previous["tag"] = np.nan
         previous["word"] = np.nan
         previous["label"] = np.nan
+
+        sentence_counter += 1
       
       # same sentence
       else:
@@ -193,6 +224,15 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
       tag = data.label[0]
       word = data.word
       label = data.label[2:]
+
+      if output_json == "NERMuD_WN_test.jsonl":
+        if data.word == "Vasco" and pd.isna(previous["word"]):
+          tag = "B"
+        if map_tag:
+          tag = tag_mapping(word)
+
+      if (tag == "O" and next_tag == "I"):
+        print(f"Empty identity: {word}")
 
       # condictions for non-blank lines
       if (tag == "B" and previous["tag"] in ["B", "I"]):
@@ -226,6 +266,8 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
       print(data.word, end=" ") 
       print(data.label)
       print(f"next label --> {next.label}")
+
+  return sentence_counter
 
 
 # MAIN
@@ -281,11 +323,13 @@ if __name__ == '__main__' :
       else:
         output_json = "NERMuD_" + dsplit + ".jsonl"
       print(f"Dataset --> {dataset}")
+
       df = make_dataframe(data_dir + dataset, dtype)
       print(f"Dataset len: {len(df)}")
-      add_to_json(output_json, df, dataset_splits, dsplit, DEBUG=DEBUG)
+      total_sentence = add_to_json(output_json, df, dataset_splits, dsplit, DEBUG=DEBUG)
       jsonl_files.add(output_json)
       print(f"JSONL output --> {output_json}")
+      print(f"JSONL sentences --> {total_sentence}")
 
 
   print(jsonl_files)
