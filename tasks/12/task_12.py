@@ -61,9 +61,7 @@ def txt_to_dict(txt_file_paths):
   # create dict topic:posts the for each topic create sample
 
   start_user_flag = "<user"
-  end_user_flag = "</user"
-  start_post_flag = "<post"
-  end_post_flag = "</post"
+  ignore_flag = ["</user","<post","</post"]
 
   topic_post = {}
 
@@ -79,7 +77,7 @@ def txt_to_dict(txt_file_paths):
           match = re.search(pattern, line)
           topic = match.group(1)
           topic_post[topic] = []
-        elif start_post_flag in line or end_post_flag in line or end_user_flag in line:
+        elif ignore_flag in line:
           continue
         elif line == "\n":
           continue
