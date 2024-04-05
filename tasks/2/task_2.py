@@ -276,10 +276,10 @@ if __name__ == '__main__' :
   # set up command line args
   parser = argparse.ArgumentParser(description='Dataset Manipulation')
   parser.add_argument('--debug', '-d', action='store_true')
-  parser.add_argument('--multiple', '-m', action='store_true')
+  parser.add_argument('--single', '-s', action='store_true')
   args = parser.parse_args()
   DEBUG = args.debug 
-  MULTIPLE = args.multiple
+  SINGLE = args.single
 
   # global variables
   results_dir = "./results/"
@@ -317,11 +317,11 @@ if __name__ == '__main__' :
     for dsplit in  dataset_splits.keys():
       dataset = dtype + "_" + dsplit +".tsv"
       # save multiple jsonl files for each dataset 
-      if MULTIPLE:
-        output_json = "NERMuD_" + dtype + "_" + dsplit + ".jsonl"
+      if SINGLE:
+        output_json = "NERMuD_" + dsplit + ".jsonl"
       # or save just one file for each split
       else:
-        output_json = "NERMuD_" + dsplit + ".jsonl"
+        output_json = "NERMuD_" + dtype + "_" + dsplit + ".jsonl"
       print(f"Dataset --> {dataset}")
 
       df = make_dataframe(data_dir + dataset, dtype)
