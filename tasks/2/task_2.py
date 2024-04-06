@@ -85,7 +85,7 @@ def make_json(output_jsonl, sentence_id, sentence_text, entities, DEBUG=False):
 
   choices = ["persona", "organizzazione", "luogo"]
   with open(output_jsonl, "a",  encoding="utf-8") as jout:
-    first_line = bool(jout.tell())
+    has_line = bool(jout.tell())
 
     for ent in entities:
       entity_name = ent[0]
@@ -101,7 +101,7 @@ def make_json(output_jsonl, sentence_id, sentence_text, entities, DEBUG=False):
 
       json_str = json.dumps(json_dict, ensure_ascii=False)
       # if the file already contains some lines the insert newline char before
-      if bool(first_line):
+      if bool(has_line):
         jout.write("\n" + json_str)
       else:
         jout.write(json_str)

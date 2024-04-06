@@ -2,7 +2,7 @@
 
 """TASK 24 - SENTIPOLC - PROMPT EVALUATION
 
-This script automatize the evaluation of different prrompts for task 24"""
+This script automatize the evaluation of different prompts for task 24."""
 
 import os
 import json
@@ -11,7 +11,6 @@ import json
 def load_jsonl(filename):
   with open(filename, 'r', encoding='utf-8') as file:
       return [json.loads(line) for line in file]
-
 
 
 # load the data and prompt files
@@ -24,5 +23,5 @@ for prompt in prompt_templates:
 
 # for each entry in the data file, format the prompt with the data and print it
 for entry in data_entries:
-  formatted_prompt = selected_prompt_template.replace('{{passage}}', entry['passage']).replace('{{question}}', entry['question'])
+  formatted_prompt = selected_prompt_template.replace('{{passage}}', entry['passage']).replace('{{}}', entry['question'])
   print(formatted_prompt)
