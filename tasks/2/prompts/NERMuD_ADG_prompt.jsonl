@@ -1,0 +1,3 @@
+{"prompt": "Cosa rappresenta l'entità: '{{target_entity}}', nel testo: '{{text}}'? "}
+{"prompt": "Considera questa entità: '{{target_entity}}', nel seguente conesto: '{{text}}'. L'entità rappresenta una persona, un luogo o un'organizzazione? "}
+{"prompt": "Sapendo che il seguente testo è tratto da una raccolta di scritti e discorsi del politico italiano Alcide De Gasperi: '{{text}}' cosa rappresenta l'entità: '{{target_entity}}', una persona, un luogo o un'organizzazione?"}

@@ -58,7 +58,8 @@ train_data_entries = load_jsonl(train_data)
 test_data_entries = load_jsonl(test_data)
 prompt_templates = load_jsonl(prompts)
 
-# check_data(data_entries)
+# check_data(train_data_entries)
+# check_data(test_data_entries)
 
 random_train_sampels = [random.randint(0, len(train_data_entries)) for i in range(1) ]
 random_test_sampels = [random.randint(0, len(test_data_entries))for i in range(1) ]
