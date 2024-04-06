@@ -40,7 +40,7 @@ Each line in your output file must be a JSON object like the one below:
 
 #### Distractors
 
-We expect from you to design a strategy to include distractors among the possible topics, so you select three different uncorrect topics beside the correct one. These three labels must be challenging for the selected posts.
+We expect from you to design a strategy to include distractors among the possible topics, so you select three different wrong topics beside the correct one. These three labels must be challenging for the selected posts.
 
 ### Prompts
 
@@ -62,3 +62,14 @@ You have to format your data using JSON Lines standard.
 ## License
 
 Creative Commons Attribution Non Commercial Share Alike 4.0 International
+
+
+## Prompts
+
+1) dati i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune?
+1a) dati i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune tra {{choices[]}}?
+2) {{post1}},{{post2}},{{post3}},{{post4}},{{post5}}\n
+qual'è l'argmento di questa conversazione? 
+2a) {{post1}},{{post2}},{{post3}},{{post4}},{{post5}}\n
+qual'è l'argmento di questa conversazione tra {{choices[]}}? 
+3) 
