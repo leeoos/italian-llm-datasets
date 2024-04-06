@@ -15,8 +15,9 @@ import wget
 import zipfile
 
 # data manipulations
-import json
+import re 
 import csv
+import json
 import jsonlines
 import pandas as pd
 
@@ -70,6 +71,27 @@ def check_quotes(data, FIXED_LEN=9, DEBUG=False):
         if len(row) > FIXED_LEN:
           return True
       return False
+  
+
+def clean_text(string):
+  """This function remove strange character and correct wierd formatting in the tweets e.g.:
+  \\ ... some text ... \\ --> become a simple double quote "... some text..."
+  long sequencies of ++ or ** (two or more) are removed
+  """
+  new_string = string.replace('\\\\', '"')
+  new_string = new_string.replace('\\\"', '" ')
+  first_quote_index = new_string.find('\"')
+  if first_quote_index != -1: 
+      # Split the text at the first occurrence of the double quote
+      before_quote = new_string[:first_quote_index + 1]
+      after_quote = new_string[first_quote_index + 1:]
+      # Remove leading spaces from the part after the double quote
+      after_quote = after_quote.lstrip(' ')
+      # Reconstruct the text
+      new_string = before_quote + after_quote
+  new_string = new_string.replace('""', '"')
+  # new_string = re.sub(r'\*{2,}', '', new_string)  maybe to add maybe
+  return new_string
 
 
 def format(data, FIXED_LEN=9, DEBUG=False) :
@@ -93,9 +115,6 @@ def format(data, FIXED_LEN=9, DEBUG=False) :
           print(row)
           print(f"after --> {len(new_row)}", end="-->")
           print(new_row)
-          if "\\\\\\" in row:
-              print(row)
-              print(new_row)
 
       else:
         # removing extra double quotes 
@@ -152,6 +171,7 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
     TOTAL_ROWS = len(pandas_df)
     DEBUG_COUNTER = 0
+    ESCAPE_COUTER = 0 
     topics = ["generico", "politico", "socio politico"]
 
     for data in pandas_df.itertuples():
@@ -165,8 +185,6 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
         print(f"data lpos: {data.lpos}")
         print(f"data lneg: {data.lneg}")
         print(f"data top: {data.top}")
-        if "\\\\\\" in data.text:
-          print(f"data text: {data.text}")
 
       if TASK == 1:
         choices = ["oggettivo", "soggettivo"]
@@ -187,11 +205,22 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
         label = 0 if data.iro == 0 else 1
             
       else:
+        print(f"Wrong task: {TASK}")
         raise NameError
+      
+      cleaned_text = clean_text(data.text)
+
+
+      if DEBUG and "\"" in data.text:
+        print(data.text.replace("\"", "\\\""))
+        print(cleaned_text)
+        sequence = "\\"
+        print(str(data.text).count(sequence))
+        ESCAPE_COUTER += str(data.text).count(sequence)
       
       json_dict = {
         "id": data.idtwitter,
-        "text": data.text,
+        "text": cleaned_text,
         "topic": topics[data.top],
         "choices":  choices,
         "label": label 
@@ -199,6 +228,7 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
 
       DEBUG_COUNTER += 1
       json_str = json.dumps(json_dict, ensure_ascii=False)
+
       if DEBUG_COUNTER < TOTAL_ROWS:  # If not the last row, add a newline character
         jout.write(json_str + '\n')
       else:  # For the last row, do not add a newline character
@@ -209,6 +239,8 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
       #   break
 
   print(f"Sub-task --> {TASK} \t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(pandas_df)}")
+  if DEBUG: 
+    print("number of anomaly found: ", ESCAPE_COUTER)
 
 
 # MAIN
@@ -258,7 +290,7 @@ if __name__ == '__main__' :
   test_df = make_dataframe(test_data)
   print()
 
-  for sub_task in range(1,4):
+  for sub_task in range(1, 4):
     train_output_jsonl = "sentipolc16-task" + str(sub_task) + "-train-data.jsonl"
     df_to_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=DEBUG)
     test_output_jsonl = "sentipolc16-task" + str(sub_task) + "-test-data.jsonl"
