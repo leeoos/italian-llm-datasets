@@ -15,7 +15,6 @@ import zipfile
 # data manipulations
 import json
 import pandas as pd
-import re
 
 
 # FUNCTIONS
@@ -40,6 +39,22 @@ def get_dat_from_url(data_url, data_out):
                   psw = "hS8KxCVQkaM2XhN"
                   zip_ref.extractall(path=dirpath, pwd=psw.encode())
 
+def unzip(data_out):
+  for dir in os.listdir(data_out):
+    dirpath = os.path.join(data_out, dir)
+    print(dirpath)
+    if os.path.isdir(dirpath):
+      for filename in os.listdir(dirpath):
+        filepath = os.path.join(dirpath, filename)
+        # Check if the file is a zip file
+        if "zip" in filename and not os.path.exists(filepath[:-4]+".csv"):
+            print(filepath)
+            # Open the zip file
+            with zipfile.ZipFile(filepath, 'r') as zip_ref:
+                # Extract or process filepath within the zip file
+                psw = "hS8KxCVQkaM2XhN"
+                zip_ref.extractall(path=dirpath, pwd=psw.encode())
+  print("Unzip!")
 
 def check_consistency(csv_path, expected_columns):
     """
@@ -158,7 +173,7 @@ if __name__ == '__main__' :
 
   # set up command line args
 
-  download = True
+  download = False
  
   if download:
 
@@ -173,6 +188,8 @@ if __name__ == '__main__' :
       shutil.rmtree("./__MACOSX")
     except FileNotFoundError:
       pass
+  #train_data_out = "./data"
+  #unzip(train_data_out)
 
   # use cached datasel saved in local
   #training_contextual = "./data/development/training_contextual.csv"
@@ -188,9 +205,11 @@ if __name__ == '__main__' :
 
   csv_files = [training_textual_dev]
   training_textual_gold_list = [training_textual_gold]
+
   json_path = "./data/TAG-it-train.jsonl"
 
-  train_df = make_list(csv_files, columns)
+  print(csv_files)
+  train_list = make_list(csv_files, columns)
   sub_task = 1
   train_output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
-  list_to_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=False)
+  list_to_jsonl(train_output_jsonl, train_list, TASK=sub_task, DEBUG=False)
