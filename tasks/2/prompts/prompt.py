@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""TASK 24 - SENTIPOLC - PROMPT EVALUATION
+"""TASK 2 - NERMuD - PROMPT EVALUATION
 
 This script automatize the evaluation of different prompts for task 24."""
 
@@ -76,6 +76,7 @@ num_samples = 1
 random_train_sampels = [random.randint(0, len(train_data_entries)) for i in range(num_samples)]
 random_test_sampels = [random.randint(0, len(test_data_entries))for i in range(num_samples)]
 random_dev_sampels = [random.randint(0, len(dev_data_entries))for i in range(num_samples)]
+
 
 for prompt in prompt_templates:
   selected_prompt_template = prompt['prompt']

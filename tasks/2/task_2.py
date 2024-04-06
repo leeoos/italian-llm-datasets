@@ -123,7 +123,7 @@ def tag_mapping(word):
   return "B"
 
 
-def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
+def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, check_dtype, DEBUG=False):
   """This function select the elements of a pandas dataframe that represent a named entity, (i.e., the words tagged with B-xxx, I-xxx) and add them to a given jsonl dataset."""
 
   labels_map = {
@@ -141,6 +141,10 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
   sentence = []
   sentence_counter = 0
   map_tag = False
+
+  if check_dtype:
+    # reset sentence indices
+    dataset_splits[dsplit] = 0
 
   for i, data in enumerate(df.itertuples()): 
 
@@ -321,20 +325,19 @@ if __name__ == '__main__' :
       # save multiple jsonl files for each dataset 
       if SINGLE:
         output_json = "NERMuD_" + dsplit + ".jsonl"
+        check_dtype = False
       # or save just one file for each split
       else:
         output_json = "NERMuD_" + dtype + "_" + dsplit + ".jsonl"
-      print(f"Dataset --> {dataset}")
+        check_dtype = True
 
+      print(f"Dataset --> {dataset}")
       df = make_dataframe(data_dir + dataset, dtype)
       print(f"Dataset len: {len(df)}")
-      total_sentence = add_to_json(output_json, df, dataset_splits, dsplit, DEBUG=DEBUG)
+      total_sentence = add_to_json(output_json, df, dataset_splits, dsplit, check_dtype, DEBUG=DEBUG)
       jsonl_files.add(output_json)
       print(f"JSONL output --> {output_json}")
       print(f"JSONL sentences --> {total_sentence}")
-    #   break
-    # break
-
 
   print(jsonl_files)
   move_data(list(jsonl_files), results_dir)
