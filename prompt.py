@@ -23,6 +23,6 @@ for prompt in prompt_templates:
   print(prompt)
 
 # for each entry in the data file, format the prompt with the data and print it
-# for entry in data_entries:
-#   formatted_prompt = selected_prompt_template.replace('{{passage}}', entry['passage']).replace('{{question}}', entry['question'])
-#   print(formatted_prompt)
+for entry in data_entries:
+  formatted_prompt = selected_prompt_template.replace('{{passage}}', entry['passage']).replace('{{question}}', entry['question'])
+  print(formatted_prompt)
