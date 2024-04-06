@@ -1,0 +1,5 @@
+{"prompt": "Questo tweet: '{{text}}'  puo essere considerato positivo, negativo, neutrale oppure un misto ?"}
+{"prompt": "Il tweet: '{{text}}', in un contesto {{topic}}, puo essere considerato positivo, negativo, neutrale oppure un misto di positivo e negativo?"}
+{"prompt": "Basandoti esclusivamnete sul contenuto del seguente tweet: '{{text}}', preso in un cosntesto {{topic}}, quale aggettivo sceglieresti per classificare il tweet: positivo, negativo, neutrale oppure un misto di positivo e negativo"}
+{"prompt": "Come definiresti la polarià questo tweet: '{{text}}'"}
+{"prompt": "Come definiresti la polarià questo tweet: '{{text}}' preso in un contesto {{topic}}"}

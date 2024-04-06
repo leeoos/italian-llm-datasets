@@ -1,0 +1,3 @@
+{"prompt": "Il tweet: '{{text}}' è ironico o serio?"}
+{"prompt": "Il tweet: '{{text}}', in un contesto {{topic}} è ironico o serio?"}
+{"prompt": "Con lo scopo di individuare la presenza di ironia in un testo come classificheresti questo tweet: '{{text}}'?"}
