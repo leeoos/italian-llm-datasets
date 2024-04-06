@@ -20,4 +20,4 @@ There are several possible tasks:
 - Binary or multi-categorization tasks
 - Natural Language Generation (NLG) tasks
 
-More comprehensive instructions can be found on this [slides](https://docs.google.com/presentation/d/1DxKuGBhC78XzUlKZzIAPg6xxOJxUykCYpyClMDqzUik/edit#slide=id.g2c523027c45_1_8)
+More comprehensive instructions can be found on this [slides](https://docs.google.com/presentation/d/16CTJxUu5GpXzvmSphdOKHfnv5knEtAA32uEAf1WB3So/edit#slide=id.g2c523027c45_1_0)
