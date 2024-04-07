@@ -88,9 +88,10 @@ def txt_to_dict(txt_file_paths):
 
 
 def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
-  """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
+  """This is the main function used to generate the desired json dataset in output."""
 
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
+    DEBUG_COUNTER = 0
 
     topics = list(topic_post.keys())
     argomenti = ["CELEBRITÀ",
@@ -177,7 +178,10 @@ def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
 
           json_str = json.dumps(json_dict, ensure_ascii=False)
           jout.write(json_str + '\n')
-    print("done")
+
+          DEBUG_COUNTER += 1
+
+    print(f"\t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(topic_post)}")
 
 
 

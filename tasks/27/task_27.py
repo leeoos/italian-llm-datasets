@@ -107,61 +107,113 @@ def correct_quotes_in_csv(csv_path):
         return False
 
 
-def make_list(data):
-    """This function will generate a pandas dataframe after checking (and correcting) the format of the provided csv."""
-    
-    print(f"Dataset: {data}")
+def make_list(filepaths):
+  """This function will generate a list after checking (and correcting) the format of the provided csv."""
 
+  data = {}
+  for data_path in filepaths:
+      with open(data_path, 'r', encoding='utf-8') as file:
+        whole = file.read()
+      if "contextual" in data_path:
+        if "training" in filepaths[0] or "training" in filepaths[1]:
+          whole = whole.split('"training_politics"\n')
+        if "test" in filepaths[0] or "test" in filepaths[1]:
+          whole = whole.split('"test_politics"\n')
+          whole = whole[-1].split('"test_religious"\n')
+        for elem in whole[1:]:
+          elem = elem.split('","')
+          if elem == [''] or elem[1] == ',':
+            continue
+          elem[0] = elem[0][1:]
+          elem[-1] = elem[-1][:-2]
+          if elem[0] not in data:
+            data[elem[0]] = {}
+          data[elem[0]]["created_at"] = elem[1]
+          data[elem[0]]["retweet_count"] = elem[2]
+          data[elem[0]]["favorite_count"] = elem[3]
+          data[elem[0]]["is_reply"] = elem[5]
+          data[elem[0]]["is_retweet"] = elem[6]
+          data[elem[0]]["is_quote"] = elem[7]
+          data[elem[0]]["user_created_at"] = elem[9]
+          data[elem[0]]["statuses_count"] = elem[10]
+          data[elem[0]]["followers_count"] = elem[11]
+          data[elem[0]]["friends_count"] = elem[12]
+             
+      else:
+        if "training" in filepaths[0] or "training" in filepaths[1]:
+          whole = whole.split('"training_politics"\n')
+        if "test" in filepaths[0] or "test" in filepaths[1]:
+          whole = whole.split('"test_politics"\n')
+          whole1 = []
+          count = 0
+          for line in whole:
+             count += len(line.split('"test_religious"\n'))
+             whole1.extend(line.split('"test_religious"\n'))
+          whole = whole1
+        
+        for elem in whole[1:]:
+          elem = elem.split('","')
+          if elem == ['']:
+            continue
+          elem[0] = elem[0][1:]
+          elem[2] = elem[2][:-2]
+          if elem[0] not in data:
+            data[elem[0]] = {}
+          data[elem[0]]["text"] = elem[1]
+          data[elem[0]]["label"] = elem[2]
+  #print(data[195027074607893])
+  return data
 
-    for csv_path in data:
-        with open(csv_path, 'r', encoding='utf-8') as file:
-          whole = file.read()
-    whole = whole.split('"training_politics"\n')
-
-    csv = []
-    for elem in whole[1:]:
-      elem = elem.split('","')
-      if elem == ['']:
-        continue
-      elem[0] = elem[0][1:]
-      elem[2] = elem[2][:-2]
-      csv.append(elem)
-      if len(elem)!=3:
-        print("error!", elem)
-
-    return csv
-
-def list_to_jsonl(output_jsonl, csv, TASK=1, DEBUG=False):
-  """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2,3]."""
-  print(TASK)
+def dict_to_jsonl(output_jsonl, data, TASK, DEBUG=False):
+  """This is the main function used to generate the desired json dataset in output. This function produce a different output for each given sub-task in [1,2]."""
+  print("task: ",TASK)
   with open(output_jsonl, "w",  encoding="utf-8") as jout:
     DEBUG_COUNTER = 0
 
-    for id, text, label in csv:
+    for id, values in data.items():
+      choices = ["si", "no"]
       if TASK == 1:
-        choices = ["si", "no"]
-      
+        #print(id)
+        json_dict = {
+          "id":       int(id),
+          "text":     values["text"],
+          "choices":  choices,
+          "label":    int(values["label"])
+        }
       elif TASK == 2:
-        choices = ["politico", "religioso"]
-            
+        if 'created_at' in values.keys():
+          json_dict = {
+            "id":       int(id),
+            "text":     values["text"],
+            "choices":  choices,
+            "label":    int(values["label"]),
+            "created_at": values['created_at'], 
+            "retweet_count": values["retweet_count"],
+            "favorite_count": values["favorite_count"],
+            "is_reply": values["is_reply"],
+            "is_retweet": values["is_retweet"],
+            "is_quote": values["is_quote"],
+            "user_created_at": values["user_created_at"],
+            "statuses_count": values["statuses_count"],
+            "followers_count": values["followers_count"],
+            "friends_count": values["friends_count"]
+          }
+        else: 
+          json_dict = {
+          "id":       int(id),
+          "text":     values["text"],
+          "choices":  choices,
+          "label":    int(values["label"])
+        }
       else:
         raise NameError
-      
-      json_dict = {
-          "id":       int(id),
-          "text":     text,
-          "choices":  choices,
-          "label":    int(label)
-      }
 
       json_str = json.dumps(json_dict, ensure_ascii=False)
       jout.write(json_str + '\n')
 
       DEBUG_COUNTER += 1
-      # if DEBUG and DEBUG_COUNTER > 10: 
-      #   break
 
-  print(f"Sub-task --> {TASK} \t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(csv)}")
+  print(f"Sub-task --> {TASK} \t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(data)}")
 
 
 
@@ -180,18 +232,17 @@ if __name__ == '__main__' :
     get_dat_from_url(train_data_url, train_data_out)
     #unzip(train_data_out)
 
-  training_contextual_dev = "./data/development/training_contextual.csv"
-  training_textual_dev = "./data/development/training_textual.csv"
+  contextual_dev = "./data/development/training_contextual.csv"
+  textual_dev = "./data/development/training_textual.csv"
 
-  training_contextual_test = "./data/test/training_contextual.csv"
-  training_textual_gold = "./data/gold/test_textual_gold.csv"
-  training_textual_test = "./data/test/training_textual.csv"
+  contextual_test = "./data/test/test_contextual.csv"
+  textual_gold = "./data/gold/test_textual_gold.csv"
 
 
-  training_textual_dev_list = [training_textual_dev]
-  training_textual_gold_list = [training_textual_gold]
+  dev_list = [textual_dev, contextual_dev]
+  gold_list = [textual_gold, contextual_test]
 
-  train_list = make_list(training_textual_dev_list)
-  sub_task = 1
-  train_output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
-  list_to_jsonl(train_output_jsonl, train_list, TASK=sub_task, DEBUG=False)
+  sub_task = 2
+  output_jsonl = "haspeede3-task" + str(sub_task) + "-test-data.jsonl"
+  data_list = make_list(gold_list)
+  dict_to_jsonl(output_jsonl, data_list, sub_task, DEBUG=False)
