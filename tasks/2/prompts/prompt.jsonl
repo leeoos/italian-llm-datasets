@@ -1,3 +1,0 @@
-{"prompt": "Nel contesto specificato da: '{{text}}'; L'entità '{{target_entity}}' rappresenta una '{{choices}}[0]', un''{{choices}}[1]' o un'{{choices}}[0]' "}
-
-{"prompt": "Leggi il seguente testo: '{{text}}'. Secondo te l'entità '{{target_entity}}' in questo testo rappresenta una '{{choices}}[0]', un''{{choices}}[1]' o un'{{choices}}[0]' "}

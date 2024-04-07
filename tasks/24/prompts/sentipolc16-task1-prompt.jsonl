@@ -1,0 +1,5 @@
+{"prompt": "Il tweet: '{{text}}' è soggettivo o oggettivo?"}
+{"prompt": "Il tweet: '{{text}}' in un contesto {{topic}} è soggetivo o oggettivo?"}
+{"prompt": "Basandoti esclusivamente sul contenuto del seguente tweet: '{{text}}'.Senza considerare ulteriori informazioni oltre al fatto che il tweet è da inquadrare in un contesto {{topic}}. Secondo te questo tweet è categorizzabile come soggettivo o come oggettivo. Per favore fornisci una risposta diretta e molto concisa a questa domanda."}
+{"prompt": "Con lo scopo di stabilire la soggetività di un testo, come definiresti questo tweet: '{{text}}'"}
+{"prompt": "Con lo scopo di stabilire la soggetività di un testo in un contesto {{topic}}, come definiresti questo tweet: '{{text}}'"}

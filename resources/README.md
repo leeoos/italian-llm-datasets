@@ -17,13 +17,20 @@
 
 For the folder structure:
 ```code 
-HM1_A-<group_id>/
-  task_name-1/
-    scripts_task_name-1/
-      fileA.py
-    <task_name-1[_subtask_name]>-train.jsonl
-    <task_name-1[_subtask_name]>-valid.jsonl
-    <task_name-1[_subtask_name]>-test.jsonl
-    <task_name-1>_prompts[_subtask_name].jsonl
-Report.pdf
+HM1_A-<student_id>/
+  <group-id>_<distractor_task_name>/	
+    - train.jsonl
+    - val.jsonl
+    - test.jsonl
+    - Report.pdf  # this identical for all the members of a specific group. All students must deliver a copy
+    - scripts.py
+  <task_name-1>/
+    - scripts.py
+    - <subtask_name>-train.jsonl
+    - <subtask_name>-valid.jsonl
+    - <subtask_name>-test.jsonl
+    - <task_name-1>_prompts[_subtask_name].jsonl
+    - <task_name-1>_Report.pdf # this instead is specific of a student.
+…
+
 ```

@@ -85,9 +85,9 @@ def make_json(output_jsonl, sentence_id, sentence_text, entities, DEBUG=False):
 
   choices = ["persona", "organizzazione", "luogo"]
   with open(output_jsonl, "a",  encoding="utf-8") as jout:
-    first_line = bool(jout.tell())
 
     for ent in entities:
+      has_line = bool(jout.tell())
       entity_name = ent[0]
       label = ent[1]
 
@@ -101,7 +101,7 @@ def make_json(output_jsonl, sentence_id, sentence_text, entities, DEBUG=False):
 
       json_str = json.dumps(json_dict, ensure_ascii=False)
       # if the file already contains some lines the insert newline char before
-      if bool(first_line):
+      if bool(has_line):
         jout.write("\n" + json_str)
       else:
         jout.write(json_str)
@@ -123,7 +123,7 @@ def tag_mapping(word):
   return "B"
 
 
-def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
+def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, check_dtype, DEBUG=False):
   """This function select the elements of a pandas dataframe that represent a named entity, (i.e., the words tagged with B-xxx, I-xxx) and add them to a given jsonl dataset."""
 
   labels_map = {
@@ -142,6 +142,10 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
   sentence_counter = 0
   map_tag = False
 
+  if check_dtype:
+    # reset sentence indices
+    dataset_splits[dsplit] = 0
+
   for i, data in enumerate(df.itertuples()): 
 
     # keep track of the next item in the dataset
@@ -157,7 +161,8 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
     allow_change = True
 
     # condictions for blank line or middle stop
-    if (pd.isna(data.word) and pd.isna(data.label)) or (data.word == "." and not pd.isna(next.word)):
+    if (pd.isna(data.word) and pd.isna(data.label)) or (data.word == "." and not pd.isna(next.word)) or\
+      (data.word == ";" and not pd.isna(next.word)):
 
       # CORRECT BAD FORMATTED SAMPLES FOR TASK WN TEST
       if output_json == "NERMuD_WN_test.jsonl":
@@ -196,7 +201,7 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
         if len(entities) > 0:
           sentence_text = join_strings_smartly(sentence)
           make_json(output_jsonl, sentence_id, sentence_text, entities, DEBUG=DEBUG)
-          # update sentence counter (here?)
+          # update sentence index
           dataset_splits[dsplit] += 1
 
         if DEBUG:
@@ -214,6 +219,7 @@ def add_to_json(output_jsonl, pandas_df, dataset_splits, dsplit, DEBUG=False):
         previous["word"] = np.nan
         previous["label"] = np.nan
 
+        # just for statistics
         sentence_counter += 1
       
       # same sentence
@@ -319,18 +325,19 @@ if __name__ == '__main__' :
       # save multiple jsonl files for each dataset 
       if SINGLE:
         output_json = "NERMuD_" + dsplit + ".jsonl"
+        check_dtype = False
       # or save just one file for each split
       else:
         output_json = "NERMuD_" + dtype + "_" + dsplit + ".jsonl"
-      print(f"Dataset --> {dataset}")
+        check_dtype = True
 
+      print(f"Dataset --> {dataset}")
       df = make_dataframe(data_dir + dataset, dtype)
       print(f"Dataset len: {len(df)}")
-      total_sentence = add_to_json(output_json, df, dataset_splits, dsplit, DEBUG=DEBUG)
+      total_sentence = add_to_json(output_json, df, dataset_splits, dsplit, check_dtype, DEBUG=DEBUG)
       jsonl_files.add(output_json)
       print(f"JSONL output --> {output_json}")
       print(f"JSONL sentences --> {total_sentence}")
-
 
   print(jsonl_files)
   move_data(list(jsonl_files), results_dir)

@@ -168,3 +168,4 @@ foo/
 # ignore actual data to avoid push large files on github
 data/
 results/
+tasks/24/clean.sh
