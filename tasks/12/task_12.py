@@ -141,19 +141,25 @@ def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
                             len(distractor[argomenti[topics.index(topic)]])-1
                             )]
             topic2 = random.randint(0,13)
+            topic3 = distractor[argomenti[topics.index(topic)]][
+              random.randint(0,
+                            len(distractor[argomenti[topics.index(topic)]])-1
+                            )]
             while topics.index(topic) == topic2 or argomenti[topic2] in distractor[argomenti[topics.index(topic)]]:
               topic2 = random.randint(0,13)
             
-            choices = [argomenti[topics.index(topic)], topic1, argomenti[topic2]]
+            choices = [argomenti[topics.index(topic)], topic1, argomenti[topic2], topic3]
 
           else:
             topic1 = random.randint(0,13)
             topic2 = random.randint(0,13)
-            while topics.index(topic) == topic1 or topics.index(topic) == topic2 or topic1 == topic2:
+            topic3 = random.randint(0,13)
+            while topics.index(topic) == topic1 or topics.index(topic) == topic2 or topics.index(topic) == topic3 or topic1 == topic2 or topic2 == topic3 :
               topic1 = random.randint(0,13)
               topic2 = random.randint(0,13)
+              topic3 = random.randint(0,13)
               
-            choices = [argomenti[topics.index(topic)], argomenti[topic1], argomenti[topic2]]
+            choices = [argomenti[topics.index(topic)], argomenti[topic1], argomenti[topic2], argomenti[topic3]]
 
           random.shuffle(choices)
           label = choices.index(argomenti[topics.index(topic)])
@@ -179,8 +185,6 @@ def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
 # MAIN
 if __name__ == '__main__' : 
 
-  # set up command line args
-
   download = False
  
   if download:
@@ -191,13 +195,6 @@ if __name__ == '__main__' :
     #get_dat_from_url(train_data_url, train_data_out)
     get_data_from_zip(train_data_out)
 
-    # remove macos directory
-    try:
-      shutil.rmtree("./__MACOSX")
-    except FileNotFoundError:
-      pass
-
-  # use cached datasel saved in local
   test1_data = "./final_package_train_test/test_task1.txt"
   test2a_data = "./final_package_train_test/test_task2a.txt"
   test2b_data = "./final_package_train_test/test_task2b.txt"
@@ -209,4 +206,4 @@ if __name__ == '__main__' :
 
   topic_posts = txt_to_dict(txt_files)
 
-  dict_to_jsonl(json_path, topic_posts, DEBUG=False) # put json in data
+  dict_to_jsonl(json_path, topic_posts, DEBUG=False)

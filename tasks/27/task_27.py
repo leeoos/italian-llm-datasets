@@ -107,10 +107,9 @@ def correct_quotes_in_csv(csv_path):
         return False
 
 
-def make_list(data, columns):
+def make_list(data):
     """This function will generate a pandas dataframe after checking (and correcting) the format of the provided csv."""
     
-    print(f"Columns: {columns}")
     print(f"Dataset: {data}")
 
 
@@ -171,8 +170,6 @@ def list_to_jsonl(output_jsonl, csv, TASK=1, DEBUG=False):
 # MAIN
 if __name__ == '__main__' : 
 
-  # set up command line args
-
   download = False
  
   if download:
@@ -181,35 +178,20 @@ if __name__ == '__main__' :
     train_data_url = "https://github.com/mirkolai/EVALITA2023-HaSpeeDe3"
     train_data_out = "./data"
     get_dat_from_url(train_data_url, train_data_out)
-    #get_data_from_zip(train_data_out)
+    #unzip(train_data_out)
 
-    # remove macos directory
-    try:
-      shutil.rmtree("./__MACOSX")
-    except FileNotFoundError:
-      pass
-  #train_data_out = "./data"
-  #unzip(train_data_out)
-
-  # use cached datasel saved in local
-  #training_contextual = "./data/development/training_contextual.csv"
+  training_contextual_dev = "./data/development/training_contextual.csv"
   training_textual_dev = "./data/development/training_textual.csv"
+
+  training_contextual_test = "./data/test/training_contextual.csv"
   training_textual_gold = "./data/gold/test_textual_gold.csv"
   training_textual_test = "./data/test/training_textual.csv"
 
-  #columns_training_contextual = ['anonymized_tweet_id', 'created_at', 'retweet_count', 'favorite_count', 'source', 'is_reply', 'is_retweet', 'is_quote', 'anonymized_user_id', 'user_created_at', 'statuses_count', 'followers_count', 'friends_count', 'anonymized_description', 'dataset']
-  columns_training_textual_dev = ['"anonymized_tweet_id"', '"anonymized_text"', '"label"', '"dataset"']
-  columns_training_textual_test = ['"anonymized_tweet_id"', '"anonymized_text"', '"label"', '"dataset"']
-  columns_training_textual_gold = ['"anonymized_tweet_id"', '"dataset"', '"label"', '"anonymized_text"']
-
-  columns = [columns_training_textual_dev]
-  columns_training_textual_gold_list = [columns_training_textual_gold]
 
   training_textual_dev_list = [training_textual_dev]
   training_textual_gold_list = [training_textual_gold]
 
-  print(training_textual_dev_list)
-  train_list = make_list(training_textual_dev_list, columns)
+  train_list = make_list(training_textual_dev_list)
   sub_task = 1
   train_output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
   list_to_jsonl(train_output_jsonl, train_list, TASK=sub_task, DEBUG=False)
