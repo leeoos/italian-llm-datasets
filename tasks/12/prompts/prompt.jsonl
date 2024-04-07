@@ -1,0 +1,6 @@
+{"prompt": "dati i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune?"}
+{"prompt": "dati i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune tra {{choices}}?"}
+{"prompt": "{{post1}},{{post2}},{{post3}},{{post4}},{{post5}}\n qual'è l'argmento di questa conversazione?" }
+{"prompt": "{{post1}},{{post2}},{{post3}},{{post4}},{{post5}}\nqual'è l'argmento di questa conversazione tra {{choices}}?" }
+{"prompt": "considerando esclusivamente i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune?"}
+{"prompt": "considerando esclusivamente i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune tra {{choices}}?"}

@@ -60,7 +60,9 @@ def txt_to_dict(txt_file_paths):
   # create dict topic:posts the for each topic create sample
 
   start_user_flag = "<user"
-  ignore_flag = ["</user>","<post>","</post>"]
+  end_user_flag= "</user>"
+  post_flag = "<post>"
+  end_post_flag = "</post>"
 
   topic_post = {}
 
@@ -76,7 +78,7 @@ def txt_to_dict(txt_file_paths):
           match = re.search(pattern, line)
           topic = match.group(1)
           topic_post[topic] = []
-        elif line in ignore_flag:
+        elif end_user_flag in line or post_flag in line or end_post_flag in line:
           continue
         elif line == "\n":
           continue
@@ -155,6 +157,9 @@ def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
 
           random.shuffle(choices)
           label = choices.index(argomenti[topics.index(topic)])
+          while not len(list_post)%5==0:
+            list_post.append("")
+          
           for i, sublist in enumerate(list_post):
               key = f"post{i+1}"
               if i < 5:
@@ -198,9 +203,9 @@ if __name__ == '__main__' :
   test2b_data = "./final_package_train_test/test_task2b.txt"
   train_data = "./final_package_train_test/training.txt"
 
-  txt_files = [test1_data, test2a_data, test2b_data, train_data]
+  txt_files = [test1_data, test2a_data, test2b_data]
 
-  json_path = "./data/TAG-it-train.jsonl"
+  json_path = "./TAG-it-test.jsonl"
 
   topic_posts = txt_to_dict(txt_files)
 

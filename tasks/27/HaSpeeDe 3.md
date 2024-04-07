@@ -45,3 +45,11 @@ Each line in the prompt files should be a JSON object following this format (max
 }
 ```
 ## Prompts
+Task 1
+1) 
+2) 
+3) 
+Task 2
+1) 
+2) 
+3) 

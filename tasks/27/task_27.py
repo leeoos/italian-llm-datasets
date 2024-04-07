@@ -195,21 +195,21 @@ if __name__ == '__main__' :
   #training_contextual = "./data/development/training_contextual.csv"
   training_textual_dev = "./data/development/training_textual.csv"
   training_textual_gold = "./data/gold/test_textual_gold.csv"
+  training_textual_test = "./data/test/training_textual.csv"
 
   #columns_training_contextual = ['anonymized_tweet_id', 'created_at', 'retweet_count', 'favorite_count', 'source', 'is_reply', 'is_retweet', 'is_quote', 'anonymized_user_id', 'user_created_at', 'statuses_count', 'followers_count', 'friends_count', 'anonymized_description', 'dataset']
   columns_training_textual_dev = ['"anonymized_tweet_id"', '"anonymized_text"', '"label"', '"dataset"']
+  columns_training_textual_test = ['"anonymized_tweet_id"', '"anonymized_text"', '"label"', '"dataset"']
   columns_training_textual_gold = ['"anonymized_tweet_id"', '"dataset"', '"label"', '"anonymized_text"']
 
   columns = [columns_training_textual_dev]
   columns_training_textual_gold_list = [columns_training_textual_gold]
 
-  csv_files = [training_textual_dev]
+  training_textual_dev_list = [training_textual_dev]
   training_textual_gold_list = [training_textual_gold]
 
-  json_path = "./data/TAG-it-train.jsonl"
-
-  print(csv_files)
-  train_list = make_list(csv_files, columns)
+  print(training_textual_dev_list)
+  train_list = make_list(training_textual_dev_list, columns)
   sub_task = 1
   train_output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
   list_to_jsonl(train_output_jsonl, train_list, TASK=sub_task, DEBUG=False)
