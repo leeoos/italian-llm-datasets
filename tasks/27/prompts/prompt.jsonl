@@ -1,6 +1,8 @@
-{"prompt": "dati i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune?"}
-{"prompt": "dati i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune tra {{choices}}?"}
-{"prompt": "{{post1}},{{post2}},{{post3}},{{post4}},{{post5}}\n qual'è l'argmento di questa conversazione?" }
-{"prompt": "{{post1}},{{post2}},{{post3}},{{post4}},{{post5}}\nqual'è l'argmento di questa conversazione tra {{choices}}?" }
-{"prompt": "considerando esclusivamente i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune?"}
-{"prompt": "considerando esclusivamente i seguenti post {{post1}},{{post2}},{{post3}},{{post4}},{{post5}} qual'è l'argomento comune tra {{choices}}?"}
+{"prompt": "questo testo: {{text}} contiene parole d'odio?"}
+{"prompt":"questo testo: {{text}} contiene hate speech?"}
+{"prompt":"{{text}} \n c'era hate speech in questo testo o no?"}
+{"prompt":"{{text}} \n c'erano parole d'odio in questo testo o no?"}
+{"prompt":"questo testo: {{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici, contiene parole d'odio?"}
+{"prompt":"questo testo: {{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici,  contiene hate speech?"}
+{"prompt":"{{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici,  \n c'era hate speech in questo testo o no?"}
+{"prompt":"{{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici,  \n c'erano parole d'odio in questo testo o no?"}

@@ -36,6 +36,22 @@ Each line in the data files should be a JSON object following this format:
     "label":    int
 }
 ```
+{
+    "id":       int(id),
+    "text":     values["text"],
+    "choices":  choices,
+    "label":    int(values["label"]),
+    "created_at": values['created_at'], 
+    "retweet_count": values["retweet_count"],
+    "favorite_count": values["favorite_count"],
+    "is_reply": values["is_reply"],
+    "is_retweet": values["is_retweet"],
+    "is_quote": values["is_quote"],
+    "user_created_at": values["user_created_at"],
+    "statuses_count": values["statuses_count"],
+    "followers_count": values["followers_count"],
+    "friends_count": values["friends_count"]
+}
 
 In the prompt file you have to report the prompts you designed for the task.
 Each line in the prompt files should be a JSON object following this format (max 5 lines):
@@ -46,10 +62,12 @@ Each line in the prompt files should be a JSON object following this format (max
 ```
 ## Prompts
 Task 1
-1) 
-2) 
-3) 
+1) questo testo: {{text}} contiene parole d'odio?
+2) questo testo: {{text}} contiene hate speech?
+3) {{text}} \n c'era hate speech in questo testo o no?
+4) {{text}} \n c'erano parole d'odio in questo testo o no?
 Task 2
-1) 
-2) 
-3) 
+1) questo testo: {{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici, contiene parole d'odio?
+2) questo testo: {{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici,  contiene hate speech?
+3) {{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici,  \n c'era hate speech in questo testo o no?
+4) {{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici,  \n c'erano parole d'odio in questo testo o no?

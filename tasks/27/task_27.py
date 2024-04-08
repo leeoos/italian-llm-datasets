@@ -119,13 +119,19 @@ def make_list(filepaths):
           whole = whole.split('"training_politics"\n')
         if "test" in filepaths[0] or "test" in filepaths[1]:
           whole = whole.split('"test_politics"\n')
-          whole = whole[-1].split('"test_religious"\n')
+          whole1 = []
+          count = 0
+          for line in whole:
+             count += len(line.split('"test_religious"\n'))
+             whole1.extend(line.split('"test_religious"\n'))
+          whole = whole1
         for elem in whole[1:]:
           elem = elem.split('","')
           if elem == [''] or elem[1] == ',':
             continue
           elem[0] = elem[0][1:]
           elem[-1] = elem[-1][:-2]
+          #print(elem[0])
           if elem[0] not in data:
             data[elem[0]] = {}
           data[elem[0]]["created_at"] = elem[1]
@@ -150,7 +156,14 @@ def make_list(filepaths):
              count += len(line.split('"test_religious"\n'))
              whole1.extend(line.split('"test_religious"\n'))
           whole = whole1
-        
+        first = whole[0].split('","')
+        id = first[3][10:]
+        text = first[4]
+        label = first[5][:-2]
+        if id not in data:
+          data[id] = {}
+        data[id]["text"] = text
+        data[id]["label"] = label
         for elem in whole[1:]:
           elem = elem.split('","')
           if elem == ['']:
@@ -182,6 +195,7 @@ def dict_to_jsonl(output_jsonl, data, TASK, DEBUG=False):
         }
       elif TASK == 2:
         if 'created_at' in values.keys():
+          #print(id)
           json_dict = {
             "id":       int(id),
             "text":     values["text"],
@@ -242,7 +256,7 @@ if __name__ == '__main__' :
   dev_list = [textual_dev, contextual_dev]
   gold_list = [textual_gold, contextual_test]
 
-  sub_task = 2
+  sub_task = 1
   output_jsonl = "haspeede3-task" + str(sub_task) + "-test-data.jsonl"
   data_list = make_list(gold_list)
   dict_to_jsonl(output_jsonl, data_list, sub_task, DEBUG=False)
