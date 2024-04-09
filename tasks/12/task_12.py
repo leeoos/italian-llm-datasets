@@ -73,18 +73,27 @@ def txt_to_dict(txt_file_paths):
 
   for txt_file_path in txt_file_paths:
     with open(txt_file_path) as txt_file:
+      i = 0
       for line in txt_file:
         if start_user_flag in line:
           # Use re.search to find the first occurrence of the pattern
           match = re.search(pattern, line)
           topic = match.group(1)
-          topic_post[topic] = []
+
+          topic_post.setdefault(topic, [])
         elif end_user_flag in line or post_flag in line or end_post_flag in line:
           continue
         elif line == "\n":
           continue
         else:
+          i += 1
+          #print(line)
+          #if i == 100:
+          #  quit()
           topic_post[topic].append(line)
+  print(i)
+  for item in topic_post:
+    print(len(topic_post[item]), item)
   return topic_post
 
 
@@ -199,7 +208,7 @@ if __name__ == '__main__' :
   test2b_data = "./final_package_train_test/test_task2b.txt"
   train_data = "./final_package_train_test/training.txt"
 
-  txt_files_test = [test1_data, test2a_data, test2b_data]
+  txt_files_test = [test1_data]
   txt_files_train = [train_data]
 
   json_path = "./TAG-it-test.jsonl"
