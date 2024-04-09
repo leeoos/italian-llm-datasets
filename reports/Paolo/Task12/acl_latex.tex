@@ -106,14 +106,12 @@
 
 \section{The description of the dataset}
 
-The dataset comprises two tasks aimed at detecting hate speech. Task 1 focuses on Hate Speech Detection, 
-where the goal is to classify whether a message contains hate speech or not. The training set consists of 5,600 tweets 
-from PolicyCorpusXL, while the test set includes 1,400 tweets from PolicyCorpusXL and 3,000 tweets from ReligiousHate. 
-In Task 2, termed Contextual Hate Speech Detection, both the content of tweets and their metadata are considered 
-for classification. This task includes two sub-tasks: Political Hate Speech Detection, which utilizes data from both 
-development and test sets from PolicyCorpusXL, and Religious Hate Speech Detection, where only the test data 
-from ReligiousHate is provided, adapted from an original cross-domain task.
-
+The TAG-it dataset, originates from the EVALITA 2020 competition, aims to explore the relationships among gender, 
+age, and various topics across different blog authors. Originally, the dataset was designed to capture these interactions, 
+with a focus on longer texts from blog posts. However, for the evaluation task, a modified version of the dataset 
+is employed, concentrating solely on shorter posts to accurately classify the topics of grouped posts. 
+This approach allows for a more focused examination of the relationship between author characteristics and topic 
+classification.
 
 \section{Methodology to reframe the dataset}
 
@@ -135,10 +133,36 @@ To run the parser you should download all the required libraries (Gitpython zipf
 task\_12.py as CWD and then run
 \begin{quote}
   \begin{verbatim}
-    python task_27.py
+    python task_12.py
   \end{verbatim}
 \end{quote}
-\noindent You will need to download the dataset manually, but .
+\noindent You will need to download the dataset manually from this link https://live.european-language-grid.eu/catalogue/corpus/8112/download/,
+and put it in the same directory as the .py file
+\begin{table*}
+  \centering
+  \caption{Distractor Relationships}
+  \label{tab:distractor}
+  \begin{tabular}{lll}
+  \hline
+  \textbf{Topic}           & \textbf{Related Topics}                                                                                                                         \\ \hline
+  CELEBRITÀ                & MEDICINA-ESTETICA, INTRATTENIMENTO                                                                                                                   \\ \hline
+  ANIME                    & GIOCHI, GIOCHI\_DI\_RUOLO, INTRATTENIMENTO                                                                                                           \\ \hline
+  FUMO                     & TECNOLOGIA, OROLOGI                                                                                                                                  \\ \hline
+  AUTO-MOTO                & SPORT, MOTO                                                                                                                                           \\ \hline
+  SPORT                    & AUTO-MOTO, MOTO, GIOCHI                                                                                                                              \\ \hline
+  MOTO                     & SPORT, AUTO-MOTO                                                                                                                                      \\ \hline
+  METAL-DETECTING          & NATURA, TECNOLOGIA, AUTO-MOTO                                                                                                                         \\ \hline
+  TECNOLOGIA               & INTRATTENIMENTO, GIOCHI, AUTO-MOTO                                                                                                                    \\ \hline
+  MEDICINA-ESTETICA        & CELEBRITÀ                                                                                                                                             \\ \hline
+  INTRATTENIMENTO          & GIOCHI, GIOCHI\_DI\_RUOLO, SPORT, ANIME                                                                                                               \\ \hline
+  NATURA                   & METAL-DETECTING                                                                                                                                       \\ \hline
+  GIOCHI                   & GIOCHI\_DI\_RUOLO, INTRATTENIMENTO                                                                                                                    \\ \hline
+  GIOCHI\_DI\_RUOLO        & GIOCHI, INTRATTENIMENTO                                                                                                                               \\ \hline
+  OROLOGI                  & CELEBRITÀ                                                                                                                                             \\ \hline
+  \end{tabular}
+  \caption{Example commands for accented characters, to be used in, \emph{e.g.}, Bib\TeX{} entries.}
+\end{table*}
+ but .
 
 
 \end{document}

@@ -43,13 +43,12 @@ def get_dat_from_url(data_url, data_out):
 def unzip(data_path, data_out):
   for dir in os.listdir(data_path):
     dirpath = os.path.join(data_path, dir)
-    print(dirpath)
     if os.path.isdir(dirpath):
       for filename in os.listdir(dirpath):
         filepath = os.path.join(dirpath, filename)
         # Check if the file is a zip file
         if "zip" in filename and not os.path.exists(filepath[:-4]+".csv"):
-            print(filepath)
+            print("unzipping",filepath)
             # Open the zip file
             with zipfile.ZipFile(filepath, 'r') as zip_ref:
                 # Extract or process filepath within the zip file

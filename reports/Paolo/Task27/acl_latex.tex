@@ -41,7 +41,7 @@
 %
 % and set <dim> to something 5cm or larger.
 
-\title{Task 12 TAG\_it}
+\title{Task 27 HaSpeeDe 3}
 
 % Author information can be set in various styles:
 % For several authors from the same institution:
@@ -106,13 +106,13 @@
 
 \section{The description of the dataset}
 
-The TAG-it dataset, originates from the EVALITA 2020 competition, aims to explore the relationships among gender, 
-age, and various topics across different blog authors. Originally, the dataset was designed to capture these interactions, 
-with a focus on longer texts from blog posts. However, for the evaluation task, a modified version of the dataset 
-is employed, concentrating solely on shorter posts to accurately classify the topics of grouped posts. 
-This approach allows for a more focused examination of the relationship between author characteristics and topic 
-classification.
-
+The dataset comprises two tasks aimed at detecting hate speech. Task 1 focuses on Hate Speech Detection, 
+where the goal is to classify whether a message contains hate speech or not. The training set consists of 5,600 tweets 
+from PolicyCorpusXL, while the test set includes 1,400 tweets from PolicyCorpusXL and 3,000 tweets from ReligiousHate. 
+In Task 2, termed Contextual Hate Speech Detection, both the content of tweets and their metadata are considered 
+for classification. This task includes two sub-tasks: Political Hate Speech Detection, which utilizes data from both 
+development and test sets from PolicyCorpusXL, and Religious Hate Speech Detection, where only the test data 
+from ReligiousHate is provided, adapted from an original cross-domain task.
 
 \section{Methodology to reframe the dataset}
 
@@ -133,40 +133,15 @@ We created 6 prompts of 2 kinds 3 in free generation style and 3 where the answe
 choices.
 
 \section{How to run}
-To run the parser you should set the folder contating task\_12.py as CWD and then run
+To run the parser you should set the folder contating task\_27.py as CWD and then run
 \begin{quote}
   \begin{verbatim}
-    python task_12.py
+    python task_27.py
   \end{verbatim}
 \end{quote}
-\noindent You will also need to download the dataset manually, beacause the automatic link doesn't work, and put it unzipped in the 
-same folder as the .py file like so /task\_12.py /final\_package\_train\_test/...
-
+\noindent You will also need to download the dataset manually from this github https://github.com/mirkolai/EVALITA2023-HaSpeeDe3
+in the same directory as the .py file
 \newpage
 
-\begin{table*}
-  \centering
-  \caption{Distractor Relationships}
-  \label{tab:distractor}
-  \begin{tabular}{lll}
-  \hline
-  \textbf{Topic}           & \textbf{Related Topics}                                                                                                                         \\ \hline
-  CELEBRITÀ                & MEDICINA-ESTETICA, INTRATTENIMENTO                                                                                                                   \\ \hline
-  ANIME                    & GIOCHI, GIOCHI\_DI\_RUOLO, INTRATTENIMENTO                                                                                                           \\ \hline
-  FUMO                     & TECNOLOGIA, OROLOGI                                                                                                                                  \\ \hline
-  AUTO-MOTO                & SPORT, MOTO                                                                                                                                           \\ \hline
-  SPORT                    & AUTO-MOTO, MOTO, GIOCHI                                                                                                                              \\ \hline
-  MOTO                     & SPORT, AUTO-MOTO                                                                                                                                      \\ \hline
-  METAL-DETECTING          & NATURA, TECNOLOGIA, AUTO-MOTO                                                                                                                         \\ \hline
-  TECNOLOGIA               & INTRATTENIMENTO, GIOCHI, AUTO-MOTO                                                                                                                    \\ \hline
-  MEDICINA-ESTETICA        & CELEBRITÀ                                                                                                                                             \\ \hline
-  INTRATTENIMENTO          & GIOCHI, GIOCHI\_DI\_RUOLO, SPORT, ANIME                                                                                                               \\ \hline
-  NATURA                   & METAL-DETECTING                                                                                                                                       \\ \hline
-  GIOCHI                   & GIOCHI\_DI\_RUOLO, INTRATTENIMENTO                                                                                                                    \\ \hline
-  GIOCHI\_DI\_RUOLO        & GIOCHI, INTRATTENIMENTO                                                                                                                               \\ \hline
-  OROLOGI                  & CELEBRITÀ                                                                                                                                             \\ \hline
-  \end{tabular}
-  \caption{Example commands for accented characters, to be used in, \emph{e.g.}, Bib\TeX{} entries.}
-\end{table*}
 
 \end{document}
