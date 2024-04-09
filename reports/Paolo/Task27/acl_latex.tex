@@ -116,21 +116,19 @@ from ReligiousHate is provided, adapted from an original cross-domain task.
 
 \section{Methodology to reframe the dataset}
 
-I exploited the fact that the data was formatted with <user... to signal the line where there was informations 
-about the user I used this regularity to find the topic with a regualar expression and <post>, </post> to divide 
-each post and </user> to indicate when the posts from a single user end. \\
-I put in a dictionary the posts as values and the topics as keys and if the topics where not divisible by 5 I would 
-add empty strings to fill missing samples 
+I exploited the fact that each row of data ends with the name of the dataset and used that to separate each line. 
+In the test set the data is taken from two datasets so the name changes accordingly but i still used the same approch 
+by first dividing for political\_test and then I iterated in each line to divide it again by Religious\_test and put it all 
+in a list. I then iterated over the resulting list and created a dictionary where the keys are the id of the tweet and 
+the values are themselfs a dictionary with as key the type of data (Ex. "text", "label", "created at") and the values is 
+the data. I differentiate between test and training and textual data and conte data from the filepath string.
 
-\section{Methodology and rationale behind the distractors}
-
-I randomly selected the distractors and made sure that they are not the same between each other and with the true topic. 
-I then shuffled the list of distractors to prevent the creation of a pattern in the indexes of the choice list.
 
 \section{Prompts}
 
-We created 6 prompts of 2 kinds 3 in free generation style and 3 where the answers were constrained by a list of provided 
-choices.
+I created 4 prompts for each task, and i added in task 2 the following metadata, created at and user\_created\_at beacause the 
+age of the profile at the time of writing might have a correlation with the task. For the same reason I added status, friend
+e followers count.
 
 \section{How to run}
 To run the parser you should set the folder contating task\_27.py as CWD and then run

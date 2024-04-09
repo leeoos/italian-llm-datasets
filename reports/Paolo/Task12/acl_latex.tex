@@ -122,11 +122,15 @@ in a list. I then iterated over the resulting list and created a dictionary wher
 the values are themselfs a dictionary with as key the type of data (Ex. "text", "label", "created at") and the values is 
 the data. I differentiate between test and training and textual data and conte data from the filepath string.
 
+\section{Methodology and rationale behind the distractors}
+
+I randomly selected the distractors and made sure that they are not the same between each other and with the true topic. 
+I then shuffled the list of distractors to prevent the creation of a pattern in the indexes of the choice list.
+
 \section{Prompts}
 
-I created 4 prompts for each task, and i added in task 2 the following metadata, created at and user\_created\_at beacause the 
-age of the profile at the time of writing might have a correlation with the task. For the same reason I added status, friend
-e followers count.
+We created 6 prompts of 2 kinds 3 in free generation style and 3 where the answers were constrained by a list of provided 
+choices.
 
 \section{How to run}
 To run the parser you should download all the required libraries (Gitpython zipfie and pandas) set the folder contating 

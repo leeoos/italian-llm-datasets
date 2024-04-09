@@ -211,3 +211,18 @@ if __name__ == '__main__' :
   output_jsonl = "haspeede3-task" + str(sub_task) + "-test-data.jsonl"
   data_list = make_list(gold_list)
   dict_to_jsonl(output_jsonl, data_list, sub_task, DEBUG=False)
+
+  sub_task = 2
+  output_jsonl = "haspeede3-task" + str(sub_task) + "-test-data.jsonl"
+  data_list = make_list(gold_list)
+  dict_to_jsonl(output_jsonl, data_list, sub_task, DEBUG=False)
+
+  sub_task = 1
+  output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
+  data_list = make_list(dev_list)
+  dict_to_jsonl(output_jsonl, data_list, sub_task, DEBUG=False)
+
+  sub_task = 2
+  output_jsonl = "haspeede3-task" + str(sub_task) + "-train-data.jsonl"
+  data_list = make_list(dev_list)
+  dict_to_jsonl(output_jsonl, data_list, sub_task, DEBUG=False)
