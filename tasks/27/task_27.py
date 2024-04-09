@@ -183,6 +183,7 @@ def dict_to_jsonl(output_jsonl, data, TASK, DEBUG=False):
 if __name__ == '__main__' : 
 
   download = True
+  unzip_needed = True
  
   if download:
 
@@ -190,7 +191,11 @@ if __name__ == '__main__' :
     train_data_url = "https://github.com/mirkolai/EVALITA2023-HaSpeeDe3"
     train_data_out = "./data"
     get_dat_from_url(train_data_url, train_data_out)
-    #unzip(train_data_out)
+  for elem in os.listdir("./data"):
+    if ".csv" in elem:
+      unzip_needed = False
+  if unzip_needed:
+    unzip(train_data_out)
 
   contextual_dev = "./data/development/training_contextual.csv"
   textual_dev = "./data/development/training_textual.csv"
