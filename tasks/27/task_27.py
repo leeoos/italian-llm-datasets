@@ -191,6 +191,7 @@ if __name__ == '__main__' :
     train_data_url = "https://github.com/mirkolai/EVALITA2023-HaSpeeDe3"
     train_data_out = "./data"
     get_dat_from_url(train_data_url, train_data_out)
+  os.makedirs("./data", exist_ok = True)
   for elem in os.listdir("./data"):
     if ".csv" in elem:
       unzip_needed = False
