@@ -197,11 +197,11 @@ if __name__ == '__main__' :
   if unzip_needed:
     unzip("./EVALITA2023-HaSpeeDe3", "./data")
 
-  contextual_dev = "./data/development/training_contextual.csv"
-  textual_dev = "./data/development/training_textual.csv"
+  contextual_dev = "./data/training_contextual.csv"
+  textual_dev = "./data/training_textual.csv"
 
-  contextual_test = "./data/test/test_contextual.csv"
-  textual_gold = "./data/gold/test_textual_gold.csv"
+  contextual_test = "./data/test_contextual.csv"
+  textual_gold = "./data/test_textual_gold.csv"
 
 
   dev_list = [textual_dev, contextual_dev]
