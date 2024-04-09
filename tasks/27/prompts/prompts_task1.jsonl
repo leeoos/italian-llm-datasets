@@ -1,0 +1,4 @@
+{"prompt": "questo testo: {{text}} contiene parole d'odio?"}
+{"prompt":"questo testo: {{text}} contiene hate speech?"}
+{"prompt":"{{text}} \n c'era hate speech in questo testo o no?"}
+{"prompt":"{{text}} \n c'erano parole d'odio in questo testo o no?"}

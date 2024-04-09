@@ -1,7 +1,3 @@
-{"prompt": "questo testo: {{text}} contiene parole d'odio?"}
-{"prompt":"questo testo: {{text}} contiene hate speech?"}
-{"prompt":"{{text}} \n c'era hate speech in questo testo o no?"}
-{"prompt":"{{text}} \n c'erano parole d'odio in questo testo o no?"}
 {"prompt":"questo testo: {{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici, contiene parole d'odio?"}
 {"prompt":"questo testo: {{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici,  contiene hate speech?"}
 {"prompt":"{{text}}, considerando che è stata postato in questa data {{created_at}}, con questa quantità di retweet {{retweet_count}}, considerando che è stata postata da un utente creato il {{user_created_at}} e che ha postato {{statuses_count}} post e ha {{followers_count}} followers e {{friends_count}} amici,  \n c'era hate speech in questo testo o no?"}
