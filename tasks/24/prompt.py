@@ -34,23 +34,32 @@ parser.add_argument('--task', '-t', type=int)
 args = parser.parse_args()
 TASK = args.task
 
+results = ""
+if os.path.isdir("./results"):
+  results = "./results/"
+
+prompts = ""
+if os.path.isdir("./prompts"):
+  prompts = "./prompts/"
+
 if TASK == 1:
-  train_data = "../results/sentipolc16-task1-train-data.jsonl"
-  test_data = "../results/sentipolc16-task1-test-data.jsonl"
-  prompts = "sentipolc16-task1-prompt.jsonl"
+  train_data = results + "sentipolc16_task1_train_data.jsonl"
+  test_data = results + "sentipolc16_task1_test_data.jsonl"
+  prompts = prompts + "sentipolc16_task1_prompt.jsonl"
 
 elif TASK == 2:
-  train_data = "../results/sentipolc16-task2-train-data.jsonl"
-  test_data = "../results/sentipolc16-task2-test-data.jsonl"
-  prompts = "sentipolc16-task2-prompt.jsonl"
+  train_data = results + "sentipolc16_task2_train_data.jsonl"
+  test_data = results + "sentipolc16_task2_test_data.jsonl"
+  prompts = prompts + "sentipolc16_task2_prompt.jsonl"
 
 elif TASK == 3:
-  train_data = "../results/sentipolc16-task3-train-data.jsonl"
-  test_data = "../results/sentipolc16-task3-test-data.jsonl"
-  prompts = "sentipolc16-task3-prompt.jsonl"
+  train_data = results + "sentipolc16_task3_train_data.jsonl"
+  test_data = results + "sentipolc16_task3_test_data.jsonl"
+  prompts = prompts + "sentipolc16_task3_prompt.jsonl"
 
 else:
-  print(f"Error: no task {TASK}")
+  print(f"Error: the dataset number {TASK} does not exist")
+  print(f"Please run: python prompt.py -t [1-3]")
   exit(1)
 
 # load the data and prompt files

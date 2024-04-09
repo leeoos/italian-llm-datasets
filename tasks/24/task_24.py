@@ -233,7 +233,6 @@ def df_to_jsonl(output_jsonl, pandas_df, TASK=1, DEBUG=False):
         jout.write(json_str + '\n')
       else:  # For the last row, do not add a newline character
         jout.write(json_str)
-      # jout.write(json_str + '\n')
 
       # if DEBUG and DEBUG_COUNTER > 10: 
       #   break
@@ -291,8 +290,8 @@ if __name__ == '__main__' :
   print()
 
   for sub_task in range(1, 4):
-    train_output_jsonl = "sentipolc16-task" + str(sub_task) + "-train-data.jsonl"
+    train_output_jsonl = "sentipolc16_task" + str(sub_task) + "_train_data.jsonl"
     df_to_jsonl(train_output_jsonl, train_df, TASK=sub_task, DEBUG=DEBUG)
-    test_output_jsonl = "sentipolc16-task" + str(sub_task) + "-test-data.jsonl"
+    test_output_jsonl = "sentipolc16_task" + str(sub_task) + "_test_data.jsonl"
     df_to_jsonl(test_output_jsonl, test_df, TASK=sub_task, DEBUG=DEBUG)
     move_data([train_output_jsonl, test_output_jsonl], "results")
