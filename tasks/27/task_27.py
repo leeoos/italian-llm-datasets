@@ -23,6 +23,7 @@ def get_dat_from_url(data_url, data_out):
     """A function to download the dataset from given url"""
     if not( os.path.exists("./data") ):
       os.makedirs("./data", exist_ok = True)
+      print("Downloading...")
       Repo.clone_from(data_url, data_out)
     # Iterate over each file in the directory
     for dir in os.listdir(data_out):
@@ -32,7 +33,7 @@ def get_dat_from_url(data_url, data_out):
           filepath = os.path.join(dirpath, filename)
           # Check if the file is a zip file
           if "zip" in filename and not os.path.exists(filepath[:-4]+".csv"):
-              print(filepath)
+              print("unzipping",filepath)
               # Open the zip file
               with zipfile.ZipFile(filepath, 'r') as zip_ref:
                   # Extract or process filepath within the zip file
