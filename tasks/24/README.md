@@ -18,15 +18,15 @@ Please, *do refer* to the task guidelines (the .pdf file) for further explanatio
 The expected output is two (2) datasets per tasks (train and test splits) + one (1) prompt file per tasks.
 
 Files to submit: 
-- `sentipolc-task1-train-data.jsonl`
-- `sentipolc-task1-test-data.jsonl`
-- `sentipolc-task1-prompt.jsonl`
-- `sentipolc-task2-train-data.jsonl`
-- `sentipolc-task2-test-data.jsonl`
-- `sentipolc-task2-prompt.jsonl`
-- `sentipolc-task3-train-data.jsonl`
-- `sentipolc-task3-test-data.jsonl`
-- `sentipolc-task3-prompt.jsonl`
+- `sentipolc_task1_train_data.jsonl`
+- `sentipolc_task1_test_data.jsonl`
+- `sentipolc_task1_prompt.jsonl`
+- `sentipolc_task2_train_data.jsonl`
+- `sentipolc_task2_test_data.jsonl`
+- `sentipolc_task2_prompt.jsonl`
+- `sentipolc_task3_train_data.jsonl`
+- `sentipolc_task3_test_data.jsonl`
+- `sentipolc_task3_prompt.jsonl`
 
 Each line in the data files should be a JSON object following this format:
 ```JSON

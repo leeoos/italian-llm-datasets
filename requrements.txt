@@ -1,5 +1,6 @@
 wget
 pandas
-shutil
-zipfile
-GitPython
+numpy
+argparse
+zipfile36
+pytest-shutil

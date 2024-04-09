@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-"""TASK 2 - NERMuD - PROMPT EVALUATION
+"""DATASET 2 - NERMuD - PROMPT EVALUATION
 
-This script automatize the evaluation of different prompts for task 24."""
+This script automatize the evaluation of different prompts for DATASET 24."""
 
 import os
 import json
@@ -23,42 +23,46 @@ def check_data(data):
     print(json_obj["label"])
 
 def make_prompt(data_entries, selected_prompt_template, index):
-    entry = data_entries[index]
-    print("ID:" + str(entry["sentence_id"]))
-    formatted_prompt = selected_prompt_template.replace('{{text}}', entry['text']).replace('{{target_entity}}', entry['target_entity'])
-    print(formatted_prompt)
-    print("ANSWER: " + entry["choices"][entry["label"]] + "\n")
+  entry = data_entries[index]
+  print("ID:" + str(entry["sentence_id"]))
+  formatted_prompt = selected_prompt_template.replace('{{text}}', entry['text']).replace('{{target_entity}}', entry['target_entity'])
+  print(formatted_prompt)
+  print("ANSWER: " + entry["choices"][entry["label"]] + "\n")
   
 parser = argparse.ArgumentParser(description='Dataset Manipulation')
-parser.add_argument('--task', '-t', type=int)
+parser.add_argument('--dataset', '-d', type=int)
 args = parser.parse_args()
-TASK = args.task
+DATASET = args.dataset
 
+results = ""
+if os.path.isdir("./results"):
+  results = "./results/"
 
-# dev_data_entries = load_jsonl("test.jsonl")
+prompts = ""
+if os.path.isdir("./prompts"):
+  prompts = "./prompts/"
 
-# dev_data_entries = load_jsonl("../results/NERMuD_WN_dev.jsonl")
+if DATASET == 1:
+  train_data = results + "NERMuD_ADG_train.jsonl"
+  test_data = results + "../results/NERMuD_ADG_test.jsonl"
+  dev_data = results + "../results/NERMuD_ADG_dev.jsonl"
+  prompts = prompts + "NERMuD_ADG_prompt.jsonl"
 
-if TASK == 1:
-  train_data = "../results/NERMuD_ADG_train.jsonl"
-  test_data = "../results/NERMuD_ADG_test.jsonl"
-  dev_data = "../results/NERMuD_ADG_dev.jsonl"
-  prompts = "NERMuD_ADG_prompt.jsonl"
+elif DATASET == 2:
+  train_data = results + "../results/NERMuD_FIC_train.jsonl"
+  test_data = results + "../results/NERMuD_FIC_test.jsonl"
+  dev_data = results + "../results/NERMuD_FIC_dev.jsonl"
+  prompts = prompts + "NERMuD_FIC_prompt.jsonl"
 
-elif TASK == 2:
-  train_data = "../results/NERMuD_FIC_train.jsonl"
-  test_data = "../results/NERMuD_FIC_test.jsonl"
-  dev_data = "../results/NERMuD_FIC_dev.jsonl"
-  prompts = "NERMuD_FIC_prompt.jsonl"
-
-elif TASK == 3:
-  train_data = "../results/NERMuD_WN_train.jsonl"
-  test_data = "../results/NERMuD_WN_test.jsonl"
-  dev_data = "../results/NERMuD_WN_dev.jsonl"
-  prompts = "NERMuD_WN_prompt.jsonl"
+elif DATASET == 3:
+  train_data = results + "../results/NERMuD_WN_train.jsonl"
+  test_data = results + "../results/NERMuD_WN_test.jsonl"
+  dev_data = results + "../results/NERMuD_WN_dev.jsonl"
+  prompts = prompts + "NERMuD_WN_prompt.jsonl"
 
 else:
-  print(f"Error: no task {TASK}")
+  print(f"Error: the DATASET {DATASET} does not exixt")
+  print(f"Please run: python prompt.py -d [1-3]")
   exit(1)
 
 # load the data and prompt files
