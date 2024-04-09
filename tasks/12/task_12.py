@@ -182,7 +182,7 @@ def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
 
           DEBUG_COUNTER += 1
 
-    print(f"\t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(topic_post)}")
+    print(f"\t Data dumped into jsonl --> {DEBUG_COUNTER}")
 
 
 
