@@ -199,10 +199,17 @@ if __name__ == '__main__' :
   test2b_data = "./final_package_train_test/test_task2b.txt"
   train_data = "./final_package_train_test/training.txt"
 
-  txt_files = [test1_data, test2a_data, test2b_data]
+  txt_files_test = [test1_data, test2a_data, test2b_data]
+  txt_files_train = [train_data]
 
   json_path = "./TAG-it-test.jsonl"
 
-  topic_posts = txt_to_dict(txt_files)
+  topic_posts = txt_to_dict(txt_files_test)
+
+  dict_to_jsonl(json_path, topic_posts, DEBUG=False)
+
+  json_path = "./TAG-it-train.jsonl"
+
+  topic_posts = txt_to_dict(txt_files_train)
 
   dict_to_jsonl(json_path, topic_posts, DEBUG=False)
