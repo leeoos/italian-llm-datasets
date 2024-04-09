@@ -182,7 +182,7 @@ def dict_to_jsonl(output_jsonl, data, TASK, DEBUG=False):
 # MAIN
 if __name__ == '__main__' : 
 
-  download = True
+  download = False
   unzip_needed = True
  
   if download:
