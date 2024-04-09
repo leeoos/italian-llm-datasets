@@ -115,12 +115,11 @@ classification.
 
 \section{Methodology to reframe the dataset}
 
-I exploited the fact that each row of data ends with the name of the dataset and used that to separate each line. 
-In the test set the data is taken from two datasets so the name changes accordingly but i still used the same approch 
-by first dividing for political\_test and then I iterated in each line to divide it again by Religious\_test and put it all 
-in a list. I then iterated over the resulting list and created a dictionary where the keys are the id of the tweet and 
-the values are themselfs a dictionary with as key the type of data (Ex. "text", "label", "created at") and the values is 
-the data. I differentiate between test and training and textual data and conte data from the filepath string.
+I exploited the fact that the data was formatted with <user... to signal the line where there was informations 
+about the user I used this regularity to find the topic with a regualar expression and <post>, </post> to divide 
+each post and </user> to indicate when the posts from a single user end. \\
+I put in a dictionary the posts as values and the topics as keys and if the topics where not divisible by 5 I would 
+add empty strings to fill missing samples 
 
 \section{Methodology and rationale behind the distractors}
 
@@ -129,7 +128,7 @@ I then shuffled the list of distractors to prevent the creation of a pattern in 
 
 \section{Prompts}
 
-We created 6 prompts of 2 kinds 3 in free generation style and 3 where the answers were constrained by a list of provided 
+I created 6 prompts of 2 kinds 3 in free generation style and 3 where the answers were constrained by a list of provided 
 choices.
 
 \section{How to run}
@@ -140,8 +139,12 @@ task\_12.py as CWD and then run
     python task_12.py
   \end{verbatim}
 \end{quote}
-\noindent You will need to download the dataset manually from this link https://live.european-language-grid.eu/catalogue/corpus/8112/download/,
-and put it in the same directory as the .py file
+\noindent You will also need to download the dataset manually, 
+from this link https://live.european-language-grid.eu/catalogue/corpus/8112/download/,, and put it either 
+zipped or unzipped in the same folder as the .py file like so /task\_12.py /final\_package\_train\_test/...
+
+\newpage
+
 \begin{table*}
   \centering
   \caption{Distractor Relationships}
