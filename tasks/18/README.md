@@ -1,4 +1,4 @@
-# TASK 22 - AcCompl-it
+# TASK 18 - AcCompl-it
 - Homepage: https://sites.google.com/view/accompl-it/home-page
 - GitHub: https://live.european-language-grid.eu/catalogue/corpus/8113/download/
 
