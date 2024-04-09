@@ -40,9 +40,9 @@ def get_dat_from_url(data_url, data_out):
                   psw = "hS8KxCVQkaM2XhN"
                   zip_ref.extractall(path=dirpath, pwd=psw.encode())
 
-def unzip(data_out):
-  for dir in os.listdir(data_out):
-    dirpath = os.path.join(data_out, dir)
+def unzip(data_path, data_out):
+  for dir in os.listdir(data_path):
+    dirpath = os.path.join(data_path, dir)
     print(dirpath)
     if os.path.isdir(dirpath):
       for filename in os.listdir(dirpath):
@@ -54,7 +54,7 @@ def unzip(data_out):
             with zipfile.ZipFile(filepath, 'r') as zip_ref:
                 # Extract or process filepath within the zip file
                 psw = "hS8KxCVQkaM2XhN"
-                zip_ref.extractall(path=dirpath, pwd=psw.encode())
+                zip_ref.extractall(path=data_out, pwd=psw.encode())
   print("Unzip!")
 
 def make_list(filepaths):
@@ -195,7 +195,7 @@ if __name__ == '__main__' :
     if ".csv" in elem:
       unzip_needed = False
   if unzip_needed:
-    unzip(train_data_out)
+    unzip("./EVALITA2023-HaSpeeDe3", "./data")
 
   contextual_dev = "./data/development/training_contextual.csv"
   textual_dev = "./data/development/training_textual.csv"
