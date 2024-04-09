@@ -36,3 +36,6 @@ The topics will also take in account the context of the tweet (top attribute) wh
 - 0  --> "generico"
 - 1  --> "politico" 
 - 2  --> "socio politico"
+
+
+remove: 296693544058515456 ‎

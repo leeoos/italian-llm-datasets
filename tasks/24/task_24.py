@@ -87,10 +87,10 @@ def clean_text(string):
       after_quote = new_string[first_quote_index + 1:]
       # Remove leading spaces from the part after the double quote
       after_quote = after_quote.lstrip(' ')
-      # Reconstruct the text
       new_string = before_quote + after_quote
   new_string = new_string.replace('""', '"')
   # new_string = re.sub(r'\*{2,}', '', new_string)  maybe to add maybe
+  new_string = new_string.replace('‎', '',) #re.sub(r'‎', '', new_string)  
   return new_string
 
 

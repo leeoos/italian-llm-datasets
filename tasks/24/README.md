@@ -19,7 +19,7 @@ The expected output is two (2) datasets per tasks (train and test splits) + one 
 
 Files to submit: 
 - `sentipolc_task1_train_data.jsonl`
-- `sentipolc_task1-test_data.jsonl`
+- `sentipolc_task1_test_data.jsonl`
 - `sentipolc_task1_prompt.jsonl`
 - `sentipolc_task2_train_data.jsonl`
 - `sentipolc_task2_test_data.jsonl`
