@@ -38,9 +38,10 @@ def get_dat_from_url(data_url, data_out):
       zip_ref.extractall()
 
 def get_data_from_zip(data_out):
-
-    with zipfile.ZipFile(data_out, "r") as zip_ref:
-      zip_ref.extractall()
+  print("unzipping")
+  with zipfile.ZipFile(data_out, "r") as zip_ref:
+    zip_ref.extractall()
+  print("unzipped")
 
 def move_data(data, dest="results"):
   """Just to move the final dtaset in the destination folder and once again avoid pushing large files."""
@@ -197,7 +198,7 @@ if __name__ == '__main__' :
     train_data_url = "https://s3.cbk.cloud.syseleven.net/elg-datasets/23ea2522f1ff4198a7848ef1867a2807/14633443ac104f05ad2f86d44e3d196a/final_package_train_test.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=371f3c77a96342b4b179abb16728fd60%2F20240327%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240327T151534Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=46b996d4d42b0fc763f88d4e615dc754e2ca41f47d8424d33a8499670b4f1593"
     train_data_out = "./data/final_package_train_test.zip"
     #get_dat_from_url(train_data_url, train_data_out)
-    get_data_from_zip(train_data_out)
+  get_data_from_zip(train_data_out)
 
   test1_data = "./final_package_train_test/test_task1.txt"
   test2a_data = "./final_package_train_test/test_task2a.txt"
