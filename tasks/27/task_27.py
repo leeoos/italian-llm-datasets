@@ -56,57 +56,6 @@ def unzip(data_out):
                 zip_ref.extractall(path=dirpath, pwd=psw.encode())
   print("Unzip!")
 
-def check_consistency(csv_path, expected_columns):
-    """
-    Checks if the columns in the CSV file match the expected columns.
-    
-    Parameters:
-        csv_path (str): The path to the CSV file.
-        expected_columns (list): The list of expected column names.
-        
-    Returns:
-        bool: True if the columns match, False otherwise.
-    """
-    try:
-        df = pd.read_csv(csv_path, nrows=1)
-        actual_columns = df.columns.tolist()
-        return actual_columns == expected_columns
-    except Exception as e:
-        print(f"Error checking consistency for {csv_path}: {str(e)}")
-        return False
-
-def format_columns(columns):
-    """Formats column names with quotes and commas between every word."""
-    formatted_columns = ['"' + '", "'.join(column.split()) + '"' for column in columns]
-    return formatted_columns
-
-
-
-def correct_quotes_in_csv(csv_path):
-    """
-    Corrects the badly formatted quotes in the CSV file.
-    
-    Parameters:
-        csv_path (str): The path to the CSV file.
-        
-    Returns:
-        bool: True if quotes are corrected successfully, False otherwise.
-    """
-    try:
-        with open(csv_path, 'r', encoding='utf-8') as file:
-            content = file.read()
-        
-        corrected_content = content.replace('""', '"')
-        
-        with open(csv_path, 'w', encoding='utf-8') as file:
-            file.write(corrected_content)
-        
-        return True
-    except Exception as e:
-        print(f"Error correcting quotes in {csv_path}: {str(e)}")
-        return False
-
-
 def make_list(filepaths):
   """This function will generate a list after checking (and correcting) the format of the provided csv."""
 
@@ -228,10 +177,6 @@ def dict_to_jsonl(output_jsonl, data, TASK, DEBUG=False):
       DEBUG_COUNTER += 1
 
   print(f"Sub-task --> {TASK} \t Data dumped into jsonl --> {DEBUG_COUNTER}/{len(data)}")
-
-
-
-
 
 # MAIN
 if __name__ == '__main__' : 
