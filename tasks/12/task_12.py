@@ -190,7 +190,7 @@ def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
 # MAIN
 if __name__ == '__main__' : 
 
-  train_data_out = "./data/final_package_train_test.zip"
+  train_data_out = "./final_package_train_test.zip"
 
   get_data_from_zip(train_data_out)
 
