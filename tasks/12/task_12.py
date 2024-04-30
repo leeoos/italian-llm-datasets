@@ -118,6 +118,7 @@ def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
                 "GIOCHI",
                 "GIOCHI_DI_RUOLO",
                 "OROLOGI"]
+    
     distractor = {
       "CELEBRITÀ": ["MEDICINA-ESTETICA", "INTRATTENIMENTO"],
       "ANIME": ["GIOCHI","GIOCHI_DI_RUOLO","INTRATTENIMENTO"],
@@ -134,6 +135,7 @@ def dict_to_jsonl(output_jsonl, topic_post, DEBUG=False, distract=True):
       "GIOCHI_DI_RUOLO":["GIOCHI","INTRATTENIMENTO"],
       "OROLOGI":["CELEBRITÀ"]
     }
+    
     for topic, posts in topic_post.items():
 
       if DEBUG:
